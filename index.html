@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spillers Network Tool</title>
+<title>Subnet Network Tool</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -16,35 +16,35 @@ body {
 h1 { font-size: 18px; margin-bottom: 10px; color: #1a3a5c; }
 
 /* ── Top bar ── */
-#top-bar {
+.inst-topbar {
   background: #dde8f0; border: 1px solid #aac;
   padding: 7px 12px; margin-bottom: 12px;
   display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
 }
-#top-bar label { font-weight: 700; color: #334; }
-#top-bar input[type=text] {
+.inst-topbar label { font-weight: 700; color: #334; }
+.inst-topbar input[type=text] {
   border: 1px solid #99b; padding: 3px 6px;
   font-size: 13px; width: 175px; border-radius: 3px;
 }
-#top-bar button {
+.inst-topbar button {
   background: #2e6fba; color: #fff;
   border: 1px solid #1e52a0;
   padding: 4px 13px; cursor: pointer;
   font-size: 13px; border-radius: 3px; font-weight: 600;
 }
-#top-bar button:hover { background: #1e52a0; }
-#clear-btn { background: #b94040 !important; border-color: #8c2a2a !important; }
-#clear-btn:hover { background: #8c2a2a !important; }
+.inst-topbar button:hover { background: #1e52a0; }
+.clear-btn { background: #b94040 !important; border-color: #8c2a2a !important; }
+.clear-btn:hover { background: #8c2a2a !important; }
 .error-msg { color: #c0392b; font-weight: 700; }
-#col-toggles {
+.col-toggles-wrap {
   display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   border-left: 2px solid #b0c8e0; padding-left: 10px; margin-left: 2px;
 }
-#col-toggles > b { color: #446; }
-#col-toggles label { display: flex; align-items: center; gap: 3px; cursor: pointer; color: #446; }
+.col-toggles-wrap > b { color: #446; }
+.col-toggles-wrap label { display: flex; align-items: center; gap: 3px; cursor: pointer; color: #446; }
 
 /* ── Table panel ── */
-#table-panel { width: 100%; overflow-x: auto; }
+.table-panel { width: 100%; overflow-x: auto; }
 
 /* ── Subnet table ── */
 table.subnet-table {
@@ -68,6 +68,13 @@ table.subnet-table td {
 }
 tr.sn-row:last-child td { border-bottom: none; }
 tr.sn-row:hover td { filter: brightness(.96); }
+tr.sn-row.no-desc td { background: #d8d8d8 !important; color: #888; }
+tr.sn-row.no-desc td .sn-addr { color: #888; }
+tr.sn-row.no-desc:hover td { background: #cccccc !important; }
+tr.sn-row.no-desc td input.desc-input { background: transparent; }
+tr.sn-row.row-highlighted td { background: #ffff88 !important; color: inherit; }
+tr.sn-row.row-highlighted td .sn-addr { color: inherit; }
+tr.sn-row.row-highlighted:hover td { background: #ffee44 !important; }
 
 /* Depth palette */
 tr.d-0 td { background: #bfd5f5; }
@@ -144,40 +151,80 @@ td.tree-cell { padding-left: 4px !important; white-space: nowrap; width: 1px; }
 }
 #join-header-th { text-align: center; background: #4a7ab5; color: #fff; }
 
-/* ── State bar ── */
-#state-bar {
-  margin-top: 12px; padding: 8px 12px;
-  background: #f0f5fc; border: 1px solid #bcd4ea;
-  border-radius: 4px; font-size: 12px; line-height: 1.9;
+
+/* ── Section headers ── */
+.section-header {
+  display: flex; align-items: center;
+  margin-bottom: 6px;
 }
+.section-title {
+  font-size: 14px; font-weight: 700; color: #1a3a5c;
+  letter-spacing: .3px;
+}
+.btn-section-hide, .btn-section-show {
+  background: #5b8fc9; color: #fff;
+  border: 1px solid #3a6ea5;
+  padding: 2px 10px; cursor: pointer;
+  font-size: 11px; border-radius: 3px;
+}
+.btn-section-hide:hover, .btn-section-show:hover { background: #2e6fba; }
+/* ── State bar ── */
 .sb-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .sb-lbl { font-weight: 700; color: #334; white-space: nowrap; }
-#permalink { color: #1e52a0; word-break: break-all; }
+.permalink { word-break: break-all; overflow-wrap: anywhere; display: inline; }
 #permalink:hover { text-decoration: underline; }
-#history-section { margin-top: 8px; border-top: 1px solid #cde0f0; padding-top: 8px; }
-#history-section > .sb-lbl { display: block; margin-bottom: 4px; }
-#history-list { list-style: none; }
-#history-list li {
-  display: flex; align-items: center; gap: 7px;
-  padding: 3px 0; border-bottom: 1px dotted #d0e4f4; font-size: 11px;
-}
-#history-list li:last-child { border-bottom: none; }
+.sb-row { flex-wrap: wrap; }
 .btn-restore {
   background: #219150; color: #fff; border: 1px solid #186038;
   padding: 2px 9px; cursor: pointer; font-size: 11px; border-radius: 3px;
   text-decoration: none !important; white-space: nowrap; display: inline-block;
 }
 .btn-restore:hover { background: #186038; }
-.hi { color: #aaa; min-width: 22px; text-align: right; }
-.hl { color: #446; flex: 1; font-family: 'Courier New', monospace; }
-.ht { color: #bbb; white-space: nowrap; }
+.history-list { list-style: none; padding: 0; margin: 0; }
+.history-list li { display: flex; align-items: center; padding: 2px 0; border-bottom: 1px dotted #d0e4f4; gap: 0; }
+.history-list li:last-child { border-bottom: none; }
+.hi { color: #aaa; min-width: 28px; text-align: right; font-size: 11px; flex-shrink: 0; }
+.hl { color: #446; flex: 1; font-family: 'Courier New', monospace; font-size: 11px; padding: 0 6px; }
+.ht-wrap { margin-left: auto; display: flex; align-items: center; gap: 0; white-space: nowrap; }
+.ht { color: #999; font-size: 11px; white-space: nowrap; }
 
-footer {
-  margin-top: 18px; border-top: 1px solid #ccd4e0;
-  padding-top: 8px; font-size: 11px; color: #888;
-}
-footer a { color: #1e52a0; }
 #no-rows td { padding: 14px; color: #888; font-style: italic; }
+
+
+/* ── Instance-scoped overrides ── */
+.sn-instance { }
+.inst-topbar {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+  background: #dde8f8; border: 1px solid #a8c0e8;
+  padding: 6px 10px; margin-bottom: 8px; border-radius: 4px;
+}
+.inst-topbar label { font-weight: 700; color: #334; }
+.inst-topbar input[type=text] {
+  border: 1px solid #99b; padding: 3px 6px;
+  font-size: 13px; width: 160px; border-radius: 3px;
+}
+.inst-topbar button {
+  background: #2e6fba; color: #fff;
+  border: 1px solid #1e52a0;
+  padding: 4px 13px; cursor: pointer;
+  font-size: 13px; border-radius: 3px; font-weight: 600;
+}
+.inst-topbar button:hover { background: #1e52a0; }
+.inst-topbar .clear-btn { background: #b94040 !important; border-color: #8c2a2a !important; }
+.inst-topbar .clear-btn:hover { background: #8c2a2a !important; }
+.col-toggles-wrap {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  border-left: 2px solid #b0c8e0; padding-left: 10px; margin-left: 2px;
+}
+.col-toggles-wrap > b { color: #446; }
+.col-toggles-wrap label { display: flex; align-items: center; gap: 3px; cursor: pointer; color: #446; }
+.table-panel { width: 100%; overflow-x: auto; }
+.state-bar {
+  margin-top: 12px; padding: 8px 12px;
+  background: #f0f5fc; border: 1px solid #bcd4ea;
+  border-radius: 4px; font-size: 12px; line-height: 1.9;
+  overflow: hidden; word-break: break-all;
+}
 
 /* ── Subnet Mask Reference Table ── */
 #mask-ref-wrap { margin-top: 32px; border-top: 2px solid #4a7ab5; padding-top: 16px; }
@@ -200,52 +247,114 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
 </head>
 <body>
 
-<h1>Spillers Network Tool</h1>
+<h1>Subnet Network Tool</h1>
+<hr style="border:none;border-top:2px solid #4a7ab5;margin:8px 0 16px 0">
 
-<div id="top-bar">
-  <label>Network</label>
-  <input type="text" id="cidr-input" placeholder="e.g. 10.0.0.0/24">
-  <button id="go-btn">&#9654; Load</button>
-  <button id="clear-btn">&#10005; Clear</button>
-  <span id="input-error" class="error-msg"></span>
-  <div id="col-toggles">
-    <b>Columns:</b>
-    <label><input type="checkbox" class="col-toggle" data-col="netmask"  checked> Netmask</label>
-    <label><input type="checkbox" class="col-toggle" data-col="range"    checked> Range</label>
-    <label><input type="checkbox" class="col-toggle" data-col="useable"  checked> Useable IPs</label>
-    <label><input type="checkbox" class="col-toggle" data-col="hosts"    checked> Hosts</label>
-    <label><input type="checkbox" class="col-toggle" data-col="desc"     checked> Description</label>
+<div class="section-header">
+  <span class="section-title">Subnet Section 1</span>
+  &nbsp;&nbsp;&nbsp;
+  <button class="btn-section-hide" data-target="inst-1">Hide</button>
+  <button class="btn-section-show" data-target="inst-1" style="display:none">Show</button>
+</div>
+<div class="sn-instance" id="inst-1">
+  <div class="inst-topbar">
+    <label>Network</label>
+    <input type="text" class="cidr-input" placeholder="e.g. 10.0.0.0/24">
+    <button class="go-btn">&#9654; Load</button>
+    <button class="clear-btn">&#10005; Clear</button>
+    <span class="input-error error-msg"></span>
+    <div class="col-toggles-wrap">
+      <b>Columns:</b>
+      <label><input type="checkbox" class="col-toggle" data-col="netmask"  checked> Netmask</label>
+      <label><input type="checkbox" class="col-toggle" data-col="range"    checked> Range</label>
+      <label><input type="checkbox" class="col-toggle" data-col="useable"  checked> Useable IPs</label>
+      <label><input type="checkbox" class="col-toggle" data-col="hosts"    checked> Hosts</label>
+      <label><input type="checkbox" class="col-toggle" data-col="desc"     checked> Description</label>
+    </div>
+  </div>
+  <div class="table-panel">
+    <table class="subnet-table">
+      <thead>
+        <tr>
+          <th style="white-space:nowrap">Subnet address</th>
+          <th class="col-netmask">Netmask</th>
+          <th class="col-range">Range of addresses</th>
+          <th class="col-useable">Useable IPs</th>
+          <th class="col-hosts" style="text-align:right">Hosts</th>
+          <th class="col-desc" style="min-width:140px">Description</th>
+          <th style="min-width:0;white-space:nowrap;padding:2px 4px">Divide</th>
+          <th class="join-header-th" colspan="1">Join</th>
+        </tr>
+      </thead>
+      <tbody class="subnet-tbody">
+        <tr class="no-rows"><td colspan="9">Enter a network above and click &#9654; Load.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="state-bar">
+    <div class="sb-row">
+      <span class="sb-lbl">&#128206; Permalink:</span>
+      <a class="permalink" href="#">&#8212;</a>
+    </div>
+    <hr style="border:none;border-top:1px solid #c8d8ec;margin:6px 0">
+    <div class="history-section" style="display:none">
+      <span class="sb-lbl">&#128339; Saved states &#8212; &#8629; Restore to undo any change:</span>
+      <ul class="history-list"></ul>
+    </div>
   </div>
 </div>
 
-<div id="table-panel">
-  <table class="subnet-table">
-    <thead>
-      <tr>
-        <th style="white-space:nowrap">Subnet address</th>
-        <th class="col-netmask">Netmask</th>
-        <th class="col-range">Range of addresses</th>
-        <th class="col-useable">Useable IPs</th>
-        <th class="col-hosts" style="text-align:right">Hosts</th>
-        <th class="col-desc" style="min-width:140px">Description</th>
-        <th style="min-width:0;white-space:nowrap;padding:2px 4px">Divide</th>
-        <th id="join-header-th" colspan="1">Join</th>
-      </tr>
-    </thead>
-    <tbody id="subnet-tbody">
-      <tr id="no-rows"><td colspan="9">Enter a network above and click &#9654; Load.</td></tr>
-    </tbody>
-  </table>
+<div class="section-header" style="margin-top:28px;border-top:2px solid #4a7ab5;padding-top:20px">
+  <span class="section-title">Subnet Section 2</span>
+  &nbsp;&nbsp;&nbsp;
+  <button class="btn-section-hide" data-target="inst-2">Hide</button>
+  <button class="btn-section-show" data-target="inst-2" style="display:none">Show</button>
 </div>
-
-<div id="state-bar">
-  <div class="sb-row">
-    <span class="sb-lbl">&#128206; Permalink:</span>
-    <a id="permalink" href="#">&#8212;</a>
+<div class="sn-instance" id="inst-2">
+  <div class="inst-topbar">
+    <label>Network</label>
+    <input type="text" class="cidr-input" placeholder="e.g. 10.0.0.0/24">
+    <button class="go-btn">&#9654; Load</button>
+    <button class="clear-btn">&#10005; Clear</button>
+    <span class="input-error error-msg"></span>
+    <div class="col-toggles-wrap">
+      <b>Columns:</b>
+      <label><input type="checkbox" class="col-toggle" data-col="netmask"  checked> Netmask</label>
+      <label><input type="checkbox" class="col-toggle" data-col="range"    checked> Range</label>
+      <label><input type="checkbox" class="col-toggle" data-col="useable"  checked> Useable IPs</label>
+      <label><input type="checkbox" class="col-toggle" data-col="hosts"    checked> Hosts</label>
+      <label><input type="checkbox" class="col-toggle" data-col="desc"     checked> Description</label>
+    </div>
   </div>
-  <div id="history-section" style="display:none">
-    <span class="sb-lbl">&#128339; Saved states &#8212; &#8629; Restore to undo any change:</span>
-    <ul id="history-list"></ul>
+  <div class="table-panel">
+    <table class="subnet-table">
+      <thead>
+        <tr>
+          <th style="white-space:nowrap">Subnet address</th>
+          <th class="col-netmask">Netmask</th>
+          <th class="col-range">Range of addresses</th>
+          <th class="col-useable">Useable IPs</th>
+          <th class="col-hosts" style="text-align:right">Hosts</th>
+          <th class="col-desc" style="min-width:140px">Description</th>
+          <th style="min-width:0;white-space:nowrap;padding:2px 4px">Divide</th>
+          <th class="join-header-th" colspan="1">Join</th>
+        </tr>
+      </thead>
+      <tbody class="subnet-tbody">
+        <tr class="no-rows"><td colspan="9">Enter a network above and click &#9654; Load.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="state-bar">
+    <div class="sb-row">
+      <span class="sb-lbl">&#128206; Permalink:</span>
+      <a class="permalink" href="#">&#8212;</a>
+    </div>
+    <hr style="border:none;border-top:1px solid #c8d8ec;margin:6px 0">
+    <div class="history-section" style="display:none">
+      <span class="sb-lbl">&#128339; Saved states &#8212; &#8629; Restore to undo any change:</span>
+      <ul class="history-list"></ul>
+    </div>
   </div>
 </div>
 
@@ -265,13 +374,11 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
   </table>
 </div>
 
-<footer>
-</footer>
 
 <script>
 'use strict';
 
-// ── IP helpers ────────────────────────────────────────────────────────────────
+// ── IP helpers (shared) ────────────────────────────────────────────────────────
 const ipToNum   = ip => ip.split('.').reduce((a,o)=>(a<<8)+parseInt(o,10),0)>>>0;
 const numToIp   = n  => [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.');
 const maskBits  = b  => b===0 ? 0 : (0xFFFFFFFF<<(32-b))>>>0;
@@ -282,13 +389,7 @@ const validIp   = ip => { const p=ip.trim().split('.'); return p.length===4&&p.e
 const esc       = s  => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const key       = (net,bits) => `${net}_${bits}`;
 
-// ── State ─────────────────────────────────────────────────────────────────────
-let rootNet=null, rootBits=null, tree=null;
-let descriptions = new Map();
-let collapsed    = new Set();
-let snapshots    = [];
-
-// ── Tree ──────────────────────────────────────────────────────────────────────
+// ── Tree helpers (shared) ─────────────────────────────────────────────────────
 const makeLeaf = (net,bits) => ({net,bits,left:null,right:null});
 const isLeaf   = n => n.left===null && n.right===null;
 
@@ -307,75 +408,6 @@ function findNode(root,tNet,tBits,parent,side){
       || findNode(root.right,tNet,tBits,root,'right');
 }
 
-// ── Serialisation ─────────────────────────────────────────────────────────────
-const serTree = n => isLeaf(n)?'L':'D'+serTree(n.left)+serTree(n.right);
-function deserTree(str,pos,net,bits){
-  const ch=str[pos.i++];
-  const nd=makeLeaf(net,bits);
-  if(ch==='D'&&bits<32){
-    nd.left =deserTree(str,pos,net,bits+1);
-    nd.right=deserTree(str,pos,(net|(1<<(31-bits)))>>>0,bits+1);
-  }
-  return nd;
-}
-function serDescs(){
-  const a=[];
-  descriptions.forEach((v,k)=>{ if(v&&v.trim()) a.push(k,v.trim()); });
-  if(!a.length) return '';
-  try{ return btoa(unescape(encodeURIComponent(JSON.stringify(a)))); }catch(e){return '';}
-}
-function deserDescs(s){
-  descriptions=new Map();
-  if(!s) return;
-  try{
-    const a=JSON.parse(decodeURIComponent(escape(atob(s))));
-    for(let i=0;i+1<a.length;i+=2) descriptions.set(a[i],a[i+1]);
-  }catch(e){}
-}
-function serCollapsed(){ return [...collapsed].filter(Boolean).join(','); }
-function deserCollapsed(s){
-  collapsed=new Set();
-  if(s) s.split(',').forEach(k=>k&&collapsed.add(k));
-}
-
-// ── URL / Permalink ───────────────────────────────────────────────────────────
-function buildUrl(){
-  if(!tree) return window.location.pathname;
-  let u=`${window.location.pathname}?network=${numToIp(rootNet)}&mask=${rootBits}&division=${serTree(tree)}`;
-  const ds=serDescs(); if(ds) u+=`&desc=${ds}`;
-  const cs=serCollapsed(); if(cs) u+=`&collapsed=${encodeURIComponent(cs)}`;
-  return u;
-}
-function updatePermalink(){
-  const u=buildUrl();
-  const a=document.getElementById('permalink');
-  a.href=u; a.textContent=(window.location.origin||'')+u;
-  window.history.replaceState(null,'',u);
-}
-
-// ── Snapshots ─────────────────────────────────────────────────────────────────
-function saveSnapshot(label){
-  snapshots.push({url:buildUrl(),label,time:new Date().toLocaleTimeString()});
-  renderSnapshots();
-}
-function renderSnapshots(){
-  const sec=document.getElementById('history-section');
-  const list=document.getElementById('history-list');
-  if(!snapshots.length){ sec.style.display='none'; return; }
-  sec.style.display='';
-  list.innerHTML='';
-  [...snapshots].reverse().forEach((item,ri)=>{
-    const idx=snapshots.length-ri;
-    const li=document.createElement('li');
-    li.innerHTML=`<span class="hi">#${idx}</span>`+
-                 `<span class="hl">${esc(item.label)}</span>`+
-                 `<span class="ht">${item.time}</span>`+
-                 `<a class="btn-restore" href="${esc(item.url)}">&crarr; Restore</a>`;
-    list.appendChild(li);
-  });
-}
-
-// ── Join column helpers ───────────────────────────────────────────────────────
 function countLeaves(node){
   if(!node) return 0;
   if(isLeaf(node)) return 1;
@@ -387,218 +419,365 @@ function getLeaves(node,out){
   getLeaves(node.left,out);
   getLeaves(node.right,out);
 }
-// Returns list of all internal nodes with their row-span data
 function collectJoinCells(node,startRow){
   if(!node||isLeaf(node)) return [];
   const lc=countLeaves(node.left);
   const rc=countLeaves(node.right);
-  const cells=[{
-    net:node.net, bits:node.bits,
-    startRow:startRow, span:lc+rc,
-    canJoin:true
-  }];
-  return cells
-    .concat(collectJoinCells(node.left,  startRow))
-    .concat(collectJoinCells(node.right, startRow+lc));
+  return [{net:node.net,bits:node.bits,startRow,span:lc+rc,canJoin:true}]
+    .concat(collectJoinCells(node.left,startRow))
+    .concat(collectJoinCells(node.right,startRow+lc));
 }
 
-// ── Render table ──────────────────────────────────────────────────────────────
-function renderTable(){
-  const tbody=document.getElementById('subnet-tbody');
-  tbody.innerHTML='';
-  if(!tree){
-    tbody.innerHTML='<tr id="no-rows"><td colspan="9">Enter a network above and click &#9654; Load.</td></tr>';
-    applyColVisibility();
-    return;
+// ── Serialisation ─────────────────────────────────────────────────────────────
+const serTree = n => isLeaf(n)?'L':'D'+serTree(n.left)+serTree(n.right);
+function deserTree(str,pos,net,bits){
+  const ch=str[pos.i++];
+  const nd=makeLeaf(net,bits);
+  if(ch==='D'&&bits<32){
+    nd.left =deserTree(str,pos,net,bits+1);
+    nd.right=deserTree(str,pos,(net|(1<<(31-bits)))>>>0,bits+1);
+  }
+  return nd;
+}
+
+// ── Instance factory ──────────────────────────────────────────────────────────
+function createInstance(containerEl, instIndex){
+  // per-instance state
+  let rootNet=null, rootBits=null, tree=null;
+  let descriptions=new Map(), collapsed=new Set(), snapshots=[];
+  let highlighted=new Set();
+
+  // DOM refs (scoped to this container)
+  const q  = sel => containerEl.querySelector(sel);
+  const qa = sel => containerEl.querySelectorAll(sel);
+
+  const cidrInput    = q('.cidr-input');
+  const goBtn        = q('.go-btn');
+  const clearBtn     = q('.clear-btn');
+  const errEl        = q('.input-error');
+  const tbody        = q('.subnet-tbody');
+  const joinTh       = q('.join-header-th');
+  const permalinkEl  = q('.permalink');
+  const histSec      = q('.history-section');
+  const histList     = q('.history-list');
+
+  // ── Serialisation helpers ──
+  function serDescs(){
+    const a=[];
+    descriptions.forEach((v,k)=>{ if(v&&v.trim()) a.push(k,v.trim()); });
+    if(!a.length) return '';
+    try{ return btoa(unescape(encodeURIComponent(JSON.stringify(a)))); }catch(e){return '';}
+  }
+  function deserDescs(s){
+    descriptions=new Map();
+    if(!s) return;
+    try{
+      const a=JSON.parse(decodeURIComponent(escape(atob(s))));
+      for(let i=0;i+1<a.length;i+=2) descriptions.set(a[i],a[i+1]);
+    }catch(e){}
   }
 
-  const leaves=[];
-  getLeaves(tree,leaves);
+  // ── Snapshots ──
+  function saveSnapshot(label){
+    // Capture full state at this moment
+    const snap = {
+      label,
+      time: new Date().toLocaleTimeString(),
+      tree: tree ? serTree(tree) : null,
+      rootNet, rootBits,
+      descs: serDescs(),
+      hi: [...highlighted].join(','),
+      cidr: tree ? `${numToIp(rootNet)}/${rootBits}` : ''
+    };
+    snapshots.push(snap);
+    renderSnapshots();
+  }
+  function renderSnapshots(){
+    if(!snapshots.length){ histSec.style.display='none'; return; }
+    histSec.style.display='';
+    histList.innerHTML='';
+    [...snapshots].reverse().forEach((snap,ri)=>{
+      const idx=snapshots.length-ri;
+      const li=document.createElement('li');
+      const btn=document.createElement('button');
+      btn.className='btn-restore';
+      btn.textContent='\u21A9 Restore';
+      btn.addEventListener('click',()=>{
+        // Restore this snapshot's state
+        if(snap.tree && snap.rootNet!==null){
+          rootNet=snap.rootNet; rootBits=snap.rootBits;
+          cidrInput.value=snap.cidr;
+          tree=makeLeaf(rootNet,rootBits);
+          try{ tree=deserTree(snap.tree,{i:0},rootNet,rootBits); }catch(e){}
+        } else {
+          rootNet=null; rootBits=null; tree=null;
+          cidrInput.value='';
+        }
+        // Restore descriptions
+        descriptions=new Map();
+        if(snap.descs) deserDescs(snap.descs);
+        // Restore highlights
+        highlighted=new Set();
+        if(snap.hi) snap.hi.split(',').forEach(k=>{ if(k) highlighted.add(k); });
+        collapsed=new Set();
+        render();
+      });
+      li.innerHTML=`<span class="hi">#${idx}</span>`+
+                   `<span class="hl">${esc(snap.label)}</span>`;
+      const wrap=document.createElement('span');
+      wrap.className='ht-wrap';
+      const ts=document.createElement('span');
+      ts.className='ht';
+      ts.textContent=snap.time;
+      wrap.appendChild(ts);
+      const spacer=document.createTextNode('\u00a0\u00a0');
+      wrap.appendChild(spacer);
+      wrap.appendChild(btn);
+      li.appendChild(wrap);
+      histList.appendChild(li);
+    });
+  }
 
-  const maxLeafBits=leaves.reduce((m,n)=>Math.max(m,n.bits), rootBits);
-  const colCount=maxLeafBits-rootBits;
+  // ── Column visibility ──
+  function applyColVisibility(){
+    qa('.col-toggle').forEach(chk=>{
+      const show=chk.checked;
+      qa(`.col-${chk.dataset.col}`).forEach(el=>{ el.style.display=show?'':'none'; });
+    });
+  }
 
-  const rawCells=collectJoinCells(tree,0);
-  const cellMap={};
-  const consumed=new Set();
-  rawCells.forEach(cell=>{
-    const colIdx=maxLeafBits-cell.bits-1;
-    if(colIdx<0||colIdx>=colCount) return;
-    cellMap[`${cell.startRow}_${colIdx}`]=cell;
-    for(let r=cell.startRow+1; r<cell.startRow+cell.span; r++)
-      consumed.add(`${r}_${colIdx}`);
-  });
-
-  const joinTh=document.getElementById('join-header-th');
-  if(joinTh) joinTh.colSpan=Math.max(colCount,1);
-
-  leaves.forEach((node,rowIdx)=>{
-    const {net,bits}=node;
-    const k=key(net,bits);
-    const bcast =bcastAddr(net,bits);
-    const useH  =hostCount(bits);
-    const firstU=bits<=30?net+1:net;
-    const lastU =bits<=30?bcast-1:bcast;
-    const desc  =descriptions.get(k)||'';
-    const depth =bits-rootBits;
-
-    const useStr=bits<=30
-      ?`${numToIp(firstU)} &ndash; ${numToIp(lastU)}`
-      :(bits===32?numToIp(net):`${numToIp(net)} &ndash; ${numToIp(bcast)}`);
-
-    const tr=document.createElement('tr');
-    tr.className=`sn-row d-${Math.min(depth,5)}`;
-    tr.dataset.key=k;
-
-    tr.innerHTML=
-      `<td class="tree-cell"><span class="sn-addr">${numToIp(net)}/${bits}</span></td>`+
-      `<td class="col-netmask">${numToIp(maskBits(bits))}</td>`+
-      `<td class="col-range">${numToIp(net)} &ndash; ${numToIp(bcast)}</td>`+
-      `<td class="col-useable">${useStr}</td>`+
-      `<td class="col-hosts" style="text-align:right">${useH.toLocaleString()}</td>`+
-      `<td class="col-desc"><input class="desc-input" type="text" placeholder="Add description&hellip;" value="${esc(desc)}" data-key="${k}"></td>`+
-      `<td><button class="btn-divide" data-net="${net}" data-bits="${bits}" ${bits<32?'':'disabled'}>Divide</button></td>`;
-
-    for(let colIdx=0; colIdx<Math.max(colCount,1); colIdx++){
-      const ck=`${rowIdx}_${colIdx}`;
-      if(consumed.has(ck)) continue;
-      const cell=cellMap[ck];
-      const td=document.createElement('td');
-      td.className='join-col-cell';
-      if(cell){
-        td.rowSpan=cell.span;
-        td.innerHTML=`<button class="btn-join-cidr" data-net="${cell.net}" data-bits="${cell.bits}">/${cell.bits}</button>`;
-      }
-      tr.appendChild(td);
+  // ── Render table ──
+  function renderTable(){
+    tbody.innerHTML='';
+    if(!tree){
+      tbody.innerHTML='<tr class="no-rows"><td colspan="9">Enter a network above and click &#9654; Load.</td></tr>';
+      applyColVisibility(); return;
     }
 
-    tbody.appendChild(tr);
-  });
+    const leaves=[];
+    getLeaves(tree,leaves);
 
-  applyColVisibility();
-}
+    const maxLeafBits=leaves.reduce((m,n)=>Math.max(m,n.bits),rootBits);
+    const colCount=maxLeafBits-rootBits;
 
-// ── Column visibility ─────────────────────────────────────────────────────────
-function applyColVisibility(){
-  document.querySelectorAll('.col-toggle').forEach(chk=>{
-    const show=chk.checked;
-    document.querySelectorAll(`.col-${chk.dataset.col}`).forEach(el=>{
-      el.style.display=show?'':'none';
+    const rawCells=collectJoinCells(tree,0);
+    const cellMap={};
+    const consumed=new Set();
+    rawCells.forEach(cell=>{
+      const colIdx=maxLeafBits-cell.bits-1;
+      if(colIdx<0||colIdx>=colCount) return;
+      cellMap[`${cell.startRow}_${colIdx}`]=cell;
+      for(let r=cell.startRow+1;r<cell.startRow+cell.span;r++) consumed.add(`${r}_${colIdx}`);
     });
+
+    if(joinTh) joinTh.colSpan=Math.max(colCount,1);
+
+    leaves.forEach((node,rowIdx)=>{
+      const {net,bits}=node;
+      const k=key(net,bits);
+      const bcast =bcastAddr(net,bits);
+      const useH  =hostCount(bits);
+      const firstU=bits<=30?net+1:net;
+      const lastU =bits<=30?bcast-1:bcast;
+      const desc  =descriptions.get(k)||'';
+      const depth =bits-rootBits;
+      const useStr=bits<=30
+        ?`${numToIp(firstU)} &ndash; ${numToIp(lastU)}`
+        :(bits===32?numToIp(net):`${numToIp(net)} &ndash; ${numToIp(bcast)}`);
+
+      const tr=document.createElement('tr');
+      const hasDesc = (descriptions.get(k)||'').trim().length > 0;
+      tr.className=`sn-row d-${Math.min(depth,5)}${highlighted.has(k)?' row-highlighted':''}${hasDesc?'':' no-desc'}`;
+      tr.dataset.key=k;
+
+      tr.innerHTML=
+        `<td class="tree-cell"><span class="sn-addr">${numToIp(net)}/${bits}</span></td>`+
+        `<td class="col-netmask">${numToIp(maskBits(bits))}</td>`+
+        `<td class="col-range">${numToIp(net)} &ndash; ${numToIp(bcast)}</td>`+
+        `<td class="col-useable">${useStr}</td>`+
+        `<td class="col-hosts" style="text-align:right">${useH.toLocaleString()}</td>`+
+        `<td class="col-desc"><input class="desc-input" type="text" placeholder="Add description&hellip;" value="${esc(desc)}" data-key="${k}"></td>`+
+        `<td style="white-space:nowrap;padding:0 3px"><button class="btn-divide" data-net="${net}" data-bits="${bits}" ${bits<32?'':'disabled'}>Divide</button></td>`;
+
+      for(let colIdx=0;colIdx<Math.max(colCount,1);colIdx++){
+        const ck=`${rowIdx}_${colIdx}`;
+        if(consumed.has(ck)) continue;
+        const cell=cellMap[ck];
+        const td=document.createElement('td');
+        td.className='join-col-cell';
+        if(cell){
+          td.rowSpan=cell.span;
+          td.innerHTML=`<button class="btn-join-cidr" data-net="${cell.net}" data-bits="${cell.bits}">/${cell.bits}</button>`;
+        }
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    });
+    applyColVisibility();
+  }
+
+  // ── Events ──
+  function loadNetwork(){
+    const raw=cidrInput.value.trim();
+    const slash=raw.lastIndexOf('/');
+    if(slash===-1){ errEl.textContent='Enter as IP/mask e.g. 10.0.0.0/24'; return; }
+    const nStr=raw.slice(0,slash).trim();
+    const mStr=raw.slice(slash+1).trim();
+    if(!validIp(nStr))                          { errEl.textContent='Invalid IP address.'; return; }
+    if(!/^\d+$/.test(mStr)||+mStr<0||+mStr>32) { errEl.textContent='Mask must be 0\u201332.'; return; }
+    errEl.textContent='';
+    const bits=parseInt(mStr);
+    rootNet=netAddr(nStr,bits); rootBits=bits;
+    tree=makeLeaf(rootNet,bits);
+    descriptions=new Map(); collapsed=new Set(); highlighted=new Set();
+    render();
+  }
+
+  goBtn.addEventListener('click', loadNetwork);
+  cidrInput.addEventListener('keydown',e=>{ if(e.key==='Enter') loadNetwork(); });
+
+  clearBtn.addEventListener('click',()=>{
+    rootNet=null; rootBits=null; tree=null;
+    descriptions=new Map(); collapsed=new Set(); snapshots=[]; highlighted=new Set();
+    cidrInput.value=''; errEl.textContent='';
+    tbody.innerHTML='<tr class="no-rows"><td colspan="9">Enter a network above and click &#9654; Load.</td></tr>';
+    histList.innerHTML=''; histSec.style.display='none';
+    if(typeof updateAllPermalinks==='function') updateAllPermalinks();
   });
+
+  tbody.addEventListener('click',e=>{
+    const btn=e.target.closest('button');
+    if(btn && !btn.disabled){
+      const net=parseInt(btn.dataset.net), bits=parseInt(btn.dataset.bits);
+      if(btn.classList.contains('btn-divide'))      doDivide(net,bits);
+      else if(btn.classList.contains('btn-join-cidr')) doJoinSelf(net,bits);
+      return;
+    }
+    if(e.target.closest('.desc-input')) return;
+    const tr=e.target.closest('tr.sn-row');
+    if(!tr) return;
+    const k=tr.dataset.key; if(!k) return;
+    if(highlighted.has(k)) highlighted.delete(k); else highlighted.add(k);
+    tr.classList.toggle('row-highlighted', highlighted.has(k));
+  });
+
+  tbody.addEventListener('input',e=>{
+    const inp=e.target.closest('.desc-input');
+    if(!inp) return;
+    const v=inp.value;
+    if(v.trim()) descriptions.set(inp.dataset.key,v);
+    else descriptions.delete(inp.dataset.key);
+    // Toggle grey instantly without full re-render
+    const row=inp.closest('tr.sn-row');
+    if(row) row.classList.toggle('no-desc', !v.trim());
+    if(typeof updateAllPermalinks==='function') updateAllPermalinks();
+  });
+
+  qa('.col-toggle').forEach(chk=>chk.addEventListener('change',()=>{
+    applyColVisibility();
+    if(typeof updateAllPermalinks==='function') updateAllPermalinks();
+  }));
+
+  // ── Public API ──
+  function getState(){
+    if(!tree) return null;
+    const division = serTree(tree);
+    const descs    = serDescs();
+    const hiArr    = [...highlighted].filter(Boolean);
+    const hi       = hiArr.length ? hiArr.join(',') : '';
+    return { cidr: `${numToIp(rootNet)}/${rootBits}`, division, descs, hi };
+  }
+
+  function restoreState({cidr, division, descs, hi}){
+    const slash = cidr.lastIndexOf('/');
+    if(slash===-1) return;
+    const nStr=cidr.slice(0,slash).trim(), mStr=cidr.slice(slash+1).trim();
+    if(!validIp(nStr)||!/^\d+$/.test(mStr)||+mStr<0||+mStr>32) return;
+    cidrInput.value = cidr;
+    const bits=parseInt(mStr);
+    rootNet=netAddr(nStr,bits); rootBits=bits;
+    tree=makeLeaf(rootNet,bits);
+    if(division){ try{ tree=deserTree(division,{i:0},rootNet,rootBits); }catch(e){} }
+    if(descs) deserDescs(descs);
+    if(hi){ hi.split(',').forEach(k=>{ if(k) highlighted.add(k); }); }
+    descriptions=descriptions; collapsed=new Set();
+    render();
+  }
+
+  function setPermalink(url){
+    permalinkEl.href = url;
+    permalinkEl.textContent = url;
+  }
+
+  // render — calls renderTable and updates permalinks
+  function render(){
+    renderTable();
+    if(typeof updateAllPermalinks==='function') updateAllPermalinks();
+  }
+
+  // Re-assign action functions to use new render
+  function doDivide(net,bits){
+    saveSnapshot(`Divide ${numToIp(net)}/${bits}`);
+    const r=findNode(tree,net,bits,null,null);
+    if(r) divideNode(r.node);
+    render();
+  }
+  function doJoinSelf(net,bits){
+    saveSnapshot(`Join \u2192 ${numToIp(net)}/${bits}`);
+    const r=findNode(tree,net,bits,null,null);
+    if(r) joinNode(r.node);
+    render();
+  }
+
+  return { getState, restoreState, setPermalink };
 }
 
-// ── Full render ───────────────────────────────────────────────────────────────
-function render(){
-  renderTable();
-  updatePermalink();
+// ── Boot: create instances, wire up URL save/restore ─────────────────────────
+const instances = [];
+document.querySelectorAll('.sn-instance').forEach((el,i) => {
+  instances.push(createInstance(el, i+1));
+});
+
+// Build full URL encoding all instances
+function buildFullUrl(){
+  const params = new URLSearchParams();
+  instances.forEach((inst,i) => {
+    const prefix = `i${i+1}`;
+    const state = inst.getState();
+    if(!state) return;
+    params.set(`${prefix}n`, state.cidr);
+    if(state.division) params.set(`${prefix}d`, state.division);
+    if(state.descs)    params.set(`${prefix}desc`, state.descs);
+    if(state.hi)       params.set(`${prefix}hi`, state.hi);
+  });
+  const qs = params.toString();
+  return qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
 }
 
-// ── Actions ───────────────────────────────────────────────────────────────────
-function doDivide(net,bits){
-  saveSnapshot(`Before divide ${numToIp(net)}/${bits}`);
-  const r=findNode(tree,net,bits,null,null);
-  if(r) divideNode(r.node);
-  render();
-}
-// doJoinSelf: cascade column buttons carry the parent net/bits —
-// clicking collapses that node (merges its two children back into one)
-function doJoinSelf(net,bits){
-  saveSnapshot(`Before join ${numToIp(net)}/${bits}`);
-  const r=findNode(tree,net,bits,null,null);
-  if(r) joinNode(r.node);
-  render();
+function updateAllPermalinks(){
+  const url = buildFullUrl();
+  instances.forEach(inst => inst.setPermalink(url));
+  try{ window.history.replaceState(null,'',url); }catch(e){}
 }
 
-// ── Init from URL ─────────────────────────────────────────────────────────────
-function initFromUrl(){
-  const p=new URLSearchParams(window.location.search);
-  const network=p.get('network')||'';
-  const mask=p.get('mask')||'';
-  if(!network||!mask) return;
-  document.getElementById('cidr-input').value=`${network}/${mask}`;
-  if(!validIp(network)||!/^\d+$/.test(mask)||+mask<0||+mask>32) return;
-  const bits=parseInt(mask);
-  rootNet=netAddr(network,bits); rootBits=bits;
-  tree=makeLeaf(rootNet,bits);
-  const div=p.get('division')||'';
-  if(div){ try{ tree=deserTree(div,{i:0},rootNet,rootBits); }catch(e){} }
-  const desc=p.get('desc')||'';
-  if(desc) deserDescs(desc);
-  const col=p.get('collapsed')||'';
-  if(col) deserCollapsed(decodeURIComponent(col));
-  render();
-}
-
-// ── Event listeners ───────────────────────────────────────────────────────────
-
-// Load
-document.getElementById('go-btn').addEventListener('click',()=>{
-  const raw=document.getElementById('cidr-input').value.trim();
-  const err=document.getElementById('input-error');
-  const slash=raw.lastIndexOf('/');
-  if(slash===-1){ err.textContent='Enter as IP/mask e.g. 10.0.0.0/24'; return; }
-  const nStr=raw.slice(0,slash).trim();
-  const mStr=raw.slice(slash+1).trim();
-  if(!validIp(nStr))                          { err.textContent='Invalid IP address.'; return; }
-  if(!/^\d+$/.test(mStr)||+mStr<0||+mStr>32) { err.textContent='Mask must be 0\u201332.'; return; }
-  err.textContent='';
-  if(tree) saveSnapshot(`Before reset \u2192 ${nStr}/${mStr}`);
-  const bits=parseInt(mStr);
-  rootNet=netAddr(nStr,bits); rootBits=bits;
-  tree=makeLeaf(rootNet,bits);
-  descriptions=new Map(); collapsed=new Set();
-  render();
-});
-
-// Enter key
-document.getElementById('cidr-input').addEventListener('keydown',e=>{
-  if(e.key==='Enter') document.getElementById('go-btn').click();
-});
-
-// Clear
-document.getElementById('clear-btn').addEventListener('click',()=>{
-  rootNet=null; rootBits=null; tree=null;
-  descriptions=new Map(); collapsed=new Set(); snapshots=[];
-  document.getElementById('cidr-input').value='';
-  document.getElementById('input-error').textContent='';
-  document.getElementById('subnet-tbody').innerHTML=
-    '<tr id="no-rows"><td colspan="9">Enter a network above and click &#9654; Load.</td></tr>';
-  const pl=document.getElementById('permalink');
-  pl.textContent='\u2014'; pl.href='#';
-  document.getElementById('history-list').innerHTML='';
-  document.getElementById('history-section').style.display='none';
-  window.history.replaceState(null,'',window.location.pathname);
-});
-
-// Table clicks: divide / join
-document.getElementById('subnet-tbody').addEventListener('click',e=>{
-  const btn=e.target.closest('button');
-  if(!btn||btn.disabled) return;
-  const net=parseInt(btn.dataset.net);
-  const bits=parseInt(btn.dataset.bits);
-  if(btn.classList.contains('btn-divide'))     doDivide(net,bits);
-  else if(btn.classList.contains('btn-join-cidr')) doJoinSelf(net,bits);
-});
-
-// Description inputs
-document.getElementById('subnet-tbody').addEventListener('input',e=>{
-  const inp=e.target.closest('.desc-input');
-  if(!inp) return;
-  const v=inp.value;
-  if(v.trim()) descriptions.set(inp.dataset.key,v);
-  else descriptions.delete(inp.dataset.key);
-  updatePermalink();
-});
-
-// Column toggles
-document.querySelectorAll('.col-toggle').forEach(chk=>
-  chk.addEventListener('change',applyColVisibility)
-);
+// Restore from URL on load
+(function restoreFromUrl(){
+  const p = new URLSearchParams(window.location.search);
+  instances.forEach((inst,i) => {
+    const prefix = `i${i+1}`;
+    const cidr    = p.get(`${prefix}n`);
+    if(!cidr) return;
+    const division = p.get(`${prefix}d`) || '';
+    const descs    = p.get(`${prefix}desc`) || '';
+    const hi       = p.get(`${prefix}hi`) || '';
+    inst.restoreState({cidr, division, descs, hi});
+  });
+})();
 
 // ── Subnet Mask Reference Table ───────────────────────────────────────────────
 (function(){
   const tbody=document.getElementById('mask-ref-tbody');
+  if(!tbody) return;
   const highlights=new Set([32,31,30,24,16,8,0]);
   const mNum=b=>b===0?0:(0xFFFFFFFF<<(32-b))>>>0;
   for(let b=32; b>=0; b--){
@@ -618,8 +797,25 @@ document.querySelectorAll('.col-toggle').forEach(chk=>
   }
 })();
 
-// ── Boot ──────────────────────────────────────────────────────────────────────
-initFromUrl();
+// ── Section hide / show ───────────────────────────────────────────────────────
+document.querySelectorAll('.btn-section-hide, .btn-section-show').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = document.getElementById(btn.dataset.target);
+    const header = btn.closest('.section-header');
+    const hideBtn = header.querySelector('.btn-section-hide');
+    const showBtn = header.querySelector('.btn-section-show');
+    if(btn.classList.contains('btn-section-hide')){
+      target.style.display = 'none';
+      hideBtn.style.display = 'none';
+      showBtn.style.display = '';
+    } else {
+      target.style.display = '';
+      hideBtn.style.display = '';
+      showBtn.style.display = 'none';
+    }
+  });
+});
 </script>
+
 </body>
 </html>
