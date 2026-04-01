@@ -35,6 +35,8 @@ h1 { font-size: 18px; margin-bottom: 10px; color: #1a3a5c; }
 .inst-topbar button:hover { background: #1e52a0; }
 .clear-btn { background: #b94040 !important; border-color: #8c2a2a !important; }
 .clear-btn:hover { background: #8c2a2a !important; }
+.csv-btn { background: #2e8b57 !important; border-color: #1e6b3a !important; }
+.csv-btn:hover { background: #1e6b3a !important; }
 .error-msg { color: #c0392b; font-weight: 700; }
 .col-toggles-wrap {
   display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
@@ -197,6 +199,7 @@ td.tree-cell { padding-left: 4px !important; white-space: nowrap; width: 1px; }
   display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
   background: #dde8f8; border: 1px solid #a8c0e8;
   padding: 6px 10px; margin-bottom: 8px; border-radius: 4px;
+  width: 100%; box-sizing: border-box;
 }
 .inst-topbar label { font-weight: 700; color: #334; }
 .inst-topbar input[type=text] {
@@ -271,6 +274,7 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
       <label><input type="checkbox" class="col-toggle" data-col="hosts"    checked> Hosts</label>
       <label><input type="checkbox" class="col-toggle" data-col="desc"     checked> Description</label>
     </div>
+    <div style="margin-left:auto"><button class="csv-btn">&#8681; Export CSV</button></div>
   </div>
   <div class="table-panel">
     <table class="subnet-table">
@@ -325,6 +329,7 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
       <label><input type="checkbox" class="col-toggle" data-col="hosts"    checked> Hosts</label>
       <label><input type="checkbox" class="col-toggle" data-col="desc"     checked> Description</label>
     </div>
+    <div style="margin-left:auto"><button class="csv-btn">&#8681; Export CSV</button></div>
   </div>
   <div class="table-panel">
     <table class="subnet-table">
@@ -454,6 +459,7 @@ function createInstance(containerEl, instIndex){
   const cidrInput    = q('.cidr-input');
   const goBtn        = q('.go-btn');
   const clearBtn     = q('.clear-btn');
+  const csvBtn       = q('.csv-btn');
   const errEl        = q('.input-error');
   const tbody        = q('.subnet-tbody');
   const joinTh       = q('.join-header-th');
@@ -635,6 +641,41 @@ function createInstance(containerEl, instIndex){
 
   goBtn.addEventListener('click', loadNetwork);
   cidrInput.addEventListener('keydown',e=>{ if(e.key==='Enter') loadNetwork(); });
+
+
+  // ── CSV Export ──
+  csvBtn.addEventListener('click', () => {
+    if(!tree){ alert('No network loaded.'); return; }
+    const leaves = [];
+    getLeaves(tree, leaves);
+    const rows = [['Subnet Address','Netmask','Range Start','Range End','Useable Start','Useable End','Hosts','Description']];
+    leaves.forEach(node => {
+      const {net, bits} = node;
+      const bcast  = bcastAddr(net, bits);
+      const useH   = hostCount(bits);
+      const firstU = bits <= 30 ? net + 1 : net;
+      const lastU  = bits <= 30 ? bcast - 1 : bcast;
+      const desc   = (descriptions.get(key(net,bits)) || '').replace(/"/g, '""');
+      rows.push([
+        `${numToIp(net)}/${bits}`,
+        numToIp(maskBits(bits)),
+        numToIp(net),
+        numToIp(bcast),
+        bits <= 30 ? numToIp(firstU) : numToIp(net),
+        bits <= 30 ? numToIp(lastU)  : numToIp(bcast),
+        useH.toString(),
+        `"${desc}"`
+      ]);
+    });
+    const csv = rows.map(r => r.join(',')).join('\r\n');
+    const blob = new Blob([csv], {type: 'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    const cidrVal = cidrInput.value.trim().replace(/[/\\:*?"<>|]/g,'_') || 'subnet';
+    a.download = `${cidrVal}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
 
   clearBtn.addEventListener('click',()=>{
     rootNet=null; rootBits=null; tree=null;
