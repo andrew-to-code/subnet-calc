@@ -13,7 +13,7 @@ body {
   color: #000;
   padding: 10px 14px 32px;
 }
-h1 { font-size: 18px; margin-bottom: 10px; color: #1a3a5c; }
+h1 { font-size: 22px; margin-bottom: 10px; color: #1a3a5c; }
 
 /* ── Top bar ── */
 .inst-topbar {
@@ -154,28 +154,11 @@ td.tree-cell { padding-left: 4px !important; white-space: nowrap; width: 1px; }
 #join-header-th { text-align: center; background: #4a7ab5; color: #fff; }
 
 
-/* ── Section headers ── */
-.section-header {
-  display: flex; align-items: center;
-  margin-bottom: 6px;
-}
-.section-title {
-  font-size: 14px; font-weight: 700; color: #1a3a5c;
-  letter-spacing: .3px;
-}
-.btn-section-hide, .btn-section-show {
-  background: #5b8fc9; color: #fff;
-  border: 1px solid #3a6ea5;
-  padding: 2px 10px; cursor: pointer;
-  font-size: 11px; border-radius: 3px;
-}
-.btn-section-hide:hover, .btn-section-show:hover { background: #2e6fba; }
+
 /* ── State bar ── */
-.sb-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .sb-lbl { font-weight: 700; color: #334; white-space: nowrap; }
 .permalink { word-break: break-all; overflow-wrap: anywhere; display: inline; }
 #permalink:hover { text-decoration: underline; }
-.sb-row { flex-wrap: wrap; }
 .btn-restore {
   background: #219150; color: #fff; border: 1px solid #186038;
   padding: 2px 9px; cursor: pointer; font-size: 11px; border-radius: 3px;
@@ -183,8 +166,7 @@ td.tree-cell { padding-left: 4px !important; white-space: nowrap; width: 1px; }
 }
 .btn-restore:hover { background: #186038; }
 .history-list { list-style: none; padding: 0; margin: 0; }
-.history-list li { display: flex; align-items: center; padding: 2px 0; border-bottom: 1px dotted #d0e4f4; gap: 0; }
-.history-list li:last-child { border-bottom: none; }
+.history-list li { display: flex; align-items: center; padding: 1px 0; gap: 0; }
 .hi { color: #aaa; min-width: 28px; text-align: right; font-size: 11px; flex-shrink: 0; }
 .hl { color: #446; flex: 1; font-family: 'Courier New', monospace; font-size: 11px; padding: 0 6px; }
 .ht-wrap { margin-left: auto; display: flex; align-items: center; gap: 0; white-space: nowrap; }
@@ -223,24 +205,92 @@ td.tree-cell { padding-left: 4px !important; white-space: nowrap; width: 1px; }
 .col-toggles-wrap label { display: flex; align-items: center; gap: 3px; cursor: pointer; color: #446; }
 .table-panel { width: 100%; overflow-x: auto; }
 .state-bar {
-  margin-top: 12px; padding: 8px 12px;
-  background: #f0f5fc; border: 1px solid #bcd4ea;
-  border-radius: 4px; font-size: 12px; line-height: 1.9;
-  overflow: hidden; word-break: break-all;
+  margin-top: 12px;
+  background: #dde8f8; border: 1px solid #a8c0e8;
+  border-radius: 4px; font-size: 12px; line-height: 1.6;
+  overflow: hidden;
+}
+.state-bar-cols {
+  display: flex; gap: 0; align-items: flex-start;
+}
+.state-bar-left {
+  flex: 0 0 40%; padding: 8px 12px;
+  border-right: 1px solid #a8c0e8;
+  word-break: break-all; overflow-wrap: anywhere;
+  min-width: 0; box-sizing: border-box;
+}
+.state-bar-right {
+  flex: 1; padding: 8px 12px;
+  min-width: 0;
 }
 
+
+
+/* ── Import modal ── */
+.import-btn { background: #7b5ea7 !important; border-color: #5c3d8a !important; }
+.import-btn:hover { background: #5c3d8a !important; }
+.imp-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.45); z-index: 1000;
+  align-items: center; justify-content: center;
+}
+.imp-overlay.open { display: flex; }
+.imp-modal {
+  background: #fff; border-radius: 7px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+  padding: 22px 26px; width: 440px; max-width: 95vw;
+  font-size: 13px; color: #334;
+}
+.imp-modal h3 { margin: 0 0 8px; font-size: 15px; color: #1a3a5c; }
+.imp-modal p  { margin: 0 0 14px; color: #556; font-size: 12px; line-height: 1.55; }
+.imp-modal p code { background:#eef; padding:1px 4px; border-radius:3px; font-size:11px; }
+.imp-row { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+.btn-tpl {
+  background:#2e6fba; color:#fff; border:1px solid #1e52a0;
+  padding:4px 12px; cursor:pointer; font-size:12px; border-radius:3px;
+}
+.btn-tpl:hover { background:#1e52a0; }
+.btn-pick {
+  background:#7b5ea7; color:#fff; border:1px solid #5c3d8a;
+  padding:4px 12px; cursor:pointer; font-size:12px; border-radius:3px;
+}
+.btn-pick:hover { background:#5c3d8a; }
+.imp-file { display:none; }
+.imp-status { font-size:12px; min-height:18px; color:#2e8b57; padding:2px 0; }
+.imp-status.err { color:#c0392b; }
+.imp-footer { display:flex; justify-content:flex-end; margin-top:12px; }
+.btn-imp-close {
+  background:#888; color:#fff; border:1px solid #666;
+  padding:4px 14px; cursor:pointer; font-size:12px; border-radius:3px;
+}
+.btn-imp-close:hover { background:#555; }
+/* ── Section toggle buttons ── */
+.btn-toggle-section {
+  background: #7aaad8; color: #fff;
+  border: 1px solid #5589b8;
+  padding: 1px 8px; cursor: pointer;
+  font-size: 11px; border-radius: 3px;
+  margin-left: 8px; vertical-align: middle;
+}
+.btn-toggle-section:hover { background: #4a7ab5; }
 /* ── Subnet Mask Reference Table ── */
-#mask-ref-wrap { margin-top: 32px; border-top: 2px solid #4a7ab5; padding-top: 16px; }
-#mask-ref-wrap h2 { font-size: 15px; font-weight: 700; color: #1a3a5c; margin-bottom: 10px; }
+#mask-ref-wrap {
+  margin-top: 20px;
+  background: #dde8f8; border: 1px solid #a8c0e8;
+  border-radius: 4px; font-size: 12px; line-height: 1.6;
+  overflow: hidden;
+}
+#mask-ref-wrap h2 { font-size: 13px; font-weight: 600; color: #334; margin-bottom: 0; }
 table.mask-ref-table { border-collapse: collapse; width: 100%; max-width: 760px; font-size: 12.5px; }
 table.mask-ref-table th {
   background: #4a7ab5; color: #fff;
-  padding: 6px 12px; text-align: left;
-  border: 1px solid #3a5f8f; white-space: nowrap;
+  padding: 2px 8px; text-align: left;
+  border-bottom: 2px solid #1e52a0;
+  white-space: nowrap; font-size: 11px;
 }
 table.mask-ref-table td {
-  padding: 3px 12px; border: 1px solid #d0dcea;
-  font-family: 'Courier New', monospace; font-size: 12px;
+  padding: 0px 8px; border: 1px solid #d0dcea; line-height: 1.2;
+  font-family: 'Courier New', monospace; font-size: 11px;
 }
 table.mask-ref-table tbody tr:nth-child(odd)  td { background: #fff; }
 table.mask-ref-table tbody tr:nth-child(even) td { background: #f0f5fb; }
@@ -251,14 +301,9 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
 <body>
 
 <h1>Subnet Network Tool</h1>
+<div style="font-size:9px;color:#778;margin:-8px 0 10px 2px;letter-spacing:.3px">Created by Andrew Spillers 2026</div>
 <hr style="border:none;border-top:2px solid #4a7ab5;margin:8px 0 16px 0">
 
-<div class="section-header">
-  <span class="section-title">Subnet Section 1</span>
-  &nbsp;&nbsp;&nbsp;
-  <button class="btn-section-hide" data-target="inst-1">Hide</button>
-  <button class="btn-section-show" data-target="inst-1" style="display:none">Show</button>
-</div>
 <div class="sn-instance" id="inst-1">
   <div class="inst-topbar">
     <label>Network</label>
@@ -274,7 +319,7 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
       <label><input type="checkbox" class="col-toggle" data-col="hosts"    checked> Hosts</label>
       <label><input type="checkbox" class="col-toggle" data-col="desc"     checked> Description</label>
     </div>
-    <div style="margin-left:auto"><button class="csv-btn">&#8681; Export CSV</button></div>
+    <div style="margin-left:auto;display:flex;gap:6px"><button class="import-btn">&#8679; Import</button><button class="csv-btn">&#8681; Export CSV</button></div>
   </div>
   <div class="table-panel">
     <table class="subnet-table">
@@ -285,7 +330,7 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
           <th class="col-range">Range of addresses</th>
           <th class="col-useable">Useable IPs</th>
           <th class="col-hosts" style="text-align:right">Hosts</th>
-          <th class="col-desc" style="min-width:140px">Description</th>
+          <th class="col-desc" style="min-width:280px">Description</th>
           <th style="min-width:0;white-space:nowrap;padding:2px 4px">Divide</th>
           <th class="join-header-th" colspan="1">Join</th>
         </tr>
@@ -295,76 +340,34 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
       </tbody>
     </table>
   </div>
-  <div class="state-bar">
-    <div class="sb-row">
-      <span class="sb-lbl">&#128206; Permalink:</span>
-      <a class="permalink" href="#">&#8212;</a>
+  <hr style="border:none;border-top:2px solid #c8d8ec;margin:20px 0 0 0">
+  <div class="state-bar" style="margin-top:12px">
+    <div class="state-bar-header" style="display:flex;align-items:center;padding:8px 12px;border-bottom:1px solid #a8c0e8;">
+      <span class="sb-lbl" style="font-size:13px;font-weight:600;color:#334">Permalink &amp; Saved States</span>
+      <button class="btn-toggle-section" data-target="state-bar-cols" data-label="Permalink &amp; Saved States">Hide</button>
     </div>
-    <hr style="border:none;border-top:1px solid #c8d8ec;margin:6px 0">
-    <div class="history-section" style="display:none">
-      <span class="sb-lbl">&#128339; Saved states &#8212; &#8629; Restore to undo any change:</span>
-      <ul class="history-list"></ul>
+    <div class="state-bar-cols" id="state-bar-cols">
+      <div class="state-bar-left">
+        <span class="sb-lbl">&#128206; Permalink:</span>
+        <a class="permalink" href="#">&#8212;</a>
+      </div>
+      <div class="state-bar-right">
+        <div class="history-section" style="display:none">
+          <span class="sb-lbl">&#128339; Saved states &#8212; &#8629; Restore to undo any change:</span>
+          <ul class="history-list"></ul>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="section-header" style="margin-top:28px;border-top:2px solid #4a7ab5;padding-top:20px">
-  <span class="section-title">Subnet Section 2</span>
-  &nbsp;&nbsp;&nbsp;
-  <button class="btn-section-hide" data-target="inst-2">Hide</button>
-  <button class="btn-section-show" data-target="inst-2" style="display:none">Show</button>
-</div>
-<div class="sn-instance" id="inst-2">
-  <div class="inst-topbar">
-    <label>Network</label>
-    <input type="text" class="cidr-input" placeholder="e.g. 10.0.0.0/24">
-    <button class="go-btn">&#9654; Load</button>
-    <button class="clear-btn">&#10005; Clear</button>
-    <span class="input-error error-msg"></span>
-    <div class="col-toggles-wrap">
-      <b>Columns:</b>
-      <label><input type="checkbox" class="col-toggle" data-col="netmask"  checked> Netmask</label>
-      <label><input type="checkbox" class="col-toggle" data-col="range"    checked> Range</label>
-      <label><input type="checkbox" class="col-toggle" data-col="useable"  checked> Useable IPs</label>
-      <label><input type="checkbox" class="col-toggle" data-col="hosts"    checked> Hosts</label>
-      <label><input type="checkbox" class="col-toggle" data-col="desc"     checked> Description</label>
-    </div>
-    <div style="margin-left:auto"><button class="csv-btn">&#8681; Export CSV</button></div>
-  </div>
-  <div class="table-panel">
-    <table class="subnet-table">
-      <thead>
-        <tr>
-          <th style="white-space:nowrap">Subnet address</th>
-          <th class="col-netmask">Netmask</th>
-          <th class="col-range">Range of addresses</th>
-          <th class="col-useable">Useable IPs</th>
-          <th class="col-hosts" style="text-align:right">Hosts</th>
-          <th class="col-desc" style="min-width:140px">Description</th>
-          <th style="min-width:0;white-space:nowrap;padding:2px 4px">Divide</th>
-          <th class="join-header-th" colspan="1">Join</th>
-        </tr>
-      </thead>
-      <tbody class="subnet-tbody">
-        <tr class="no-rows"><td colspan="9">Enter a network above and click &#9654; Load.</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="state-bar">
-    <div class="sb-row">
-      <span class="sb-lbl">&#128206; Permalink:</span>
-      <a class="permalink" href="#">&#8212;</a>
-    </div>
-    <hr style="border:none;border-top:1px solid #c8d8ec;margin:6px 0">
-    <div class="history-section" style="display:none">
-      <span class="sb-lbl">&#128339; Saved states &#8212; &#8629; Restore to undo any change:</span>
-      <ul class="history-list"></ul>
-    </div>
-  </div>
-</div>
 
 <div id="mask-ref-wrap">
-  <h2>Subnet Mask Reference</h2>
+  <div style="display:flex;align-items:center;padding:8px 12px;border-bottom:1px solid #a8c0e8;">
+    <h2>Subnet Mask Reference</h2>
+    <button class="btn-toggle-section" data-target="mask-ref-body" data-label="Subnet Mask Reference">Hide</button>
+  </div>
+  <div id="mask-ref-body" style="padding:8px 12px">
   <table class="mask-ref-table">
     <thead>
       <tr>
@@ -377,6 +380,7 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
     </thead>
     <tbody id="mask-ref-tbody"></tbody>
   </table>
+  </div>
 </div>
 
 
@@ -460,6 +464,7 @@ function createInstance(containerEl, instIndex){
   const goBtn        = q('.go-btn');
   const clearBtn     = q('.clear-btn');
   const csvBtn       = q('.csv-btn');
+  const importBtn    = q('.import-btn');
   const errEl        = q('.input-error');
   const tbody        = q('.subnet-tbody');
   const joinTh       = q('.join-header-th');
@@ -488,7 +493,7 @@ function createInstance(containerEl, instIndex){
     // Capture full state at this moment
     const snap = {
       label,
-      time: new Date().toLocaleTimeString(),
+      time: new Date().toLocaleDateString(undefined,{month:'2-digit',day:'2-digit',year:'2-digit'}) + ' ' + new Date().toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit',second:'2-digit'}),
       tree: tree ? serTree(tree) : null,
       rootNet, rootBits,
       descs: serDescs(),
@@ -643,12 +648,73 @@ function createInstance(containerEl, instIndex){
   cidrInput.addEventListener('keydown',e=>{ if(e.key==='Enter') loadNetwork(); });
 
 
+
+
+
+  // ── Import: open modal bound to this instance ──
+  importBtn.addEventListener('click', () => {
+    window._importTarget = { loadCidr: cidrInput, doImport: importData };
+    document.getElementById('imp-status').textContent = '';
+    document.getElementById('imp-status').className = 'imp-status';
+    document.getElementById('imp-file').value = '';
+    document.getElementById('imp-overlay').classList.add('open');
+  });
+
+  function importData(rows) {
+    if(!rows.length) return 'No valid rows found.';
+    const first = rows[0];
+    const sl = first.cidr.lastIndexOf('/');
+    if(sl === -1) return 'First row missing CIDR notation (e.g. 10.0.0.0/24).';
+    const nStr = first.cidr.slice(0, sl).trim();
+    const mStr = first.cidr.slice(sl + 1).trim();
+    if(!validIp(nStr) || !/^\d+$/.test(mStr) || +mStr < 0 || +mStr > 32)
+      return 'First row has an invalid IP or mask.';
+    const bits = parseInt(mStr);
+    rootNet = netAddr(nStr, bits);
+    rootBits = bits;
+    cidrInput.value = `${numToIp(rootNet)}/${rootBits}`;
+    tree = makeLeaf(rootNet, rootBits);
+    descriptions = new Map();
+    highlighted = new Set();
+    collapsed = new Set();
+    rows.forEach(row => {
+      const s = row.cidr.lastIndexOf('/');
+      if(s === -1) return;
+      const rBits = parseInt(row.cidr.slice(s + 1));
+      const rNet  = netAddr(row.cidr.slice(0, s).trim(), rBits);
+      if(isNaN(rBits)) return;
+      _insertLeaf(tree, rNet, rBits);
+      if(row.desc) descriptions.set(key(rNet, rBits), row.desc);
+    });
+    render();
+    return null;
+  }
+
+  function _insertLeaf(node, tNet, tBits) {
+    if(node.bits === tBits) return;
+    if(isLeaf(node)) divideNode(node);
+    const child = ((tNet >>> (31 - node.bits)) & 1) ? node.right : node.left;
+    _insertLeaf(child, tNet, tBits);
+  }
+
   // ── CSV Export ──
   csvBtn.addEventListener('click', () => {
     if(!tree){ alert('No network loaded.'); return; }
     const leaves = [];
     getLeaves(tree, leaves);
     const rows = [['Subnet Address','Netmask','Range Start','Range End','Useable Start','Useable End','Hosts','Description']];
+    // First row: the root supernet
+    const rootBcast = bcastAddr(rootNet, rootBits);
+    rows.push([
+      `${numToIp(rootNet)}/${rootBits}`,
+      numToIp(maskBits(rootBits)),
+      numToIp(rootNet),
+      numToIp(rootBcast),
+      rootBits <= 30 ? numToIp(rootNet + 1) : numToIp(rootNet),
+      rootBits <= 30 ? numToIp(rootBcast - 1) : numToIp(rootBcast),
+      hostCount(rootBits).toString(),
+      '"Supernet"'
+    ]);
     leaves.forEach(node => {
       const {net, bits} = node;
       const bcast  = bcastAddr(net, bits);
@@ -819,7 +885,7 @@ function updateAllPermalinks(){
 (function(){
   const tbody=document.getElementById('mask-ref-tbody');
   if(!tbody) return;
-  const highlights=new Set([32,31,30,24,16,8,0]);
+  const highlights=new Set([32,24,16,8,0]);
   const mNum=b=>b===0?0:(0xFFFFFFFF<<(32-b))>>>0;
   for(let b=32; b>=0; b--){
     const mask=mNum(b);
@@ -838,25 +904,125 @@ function updateAllPermalinks(){
   }
 })();
 
-// ── Section hide / show ───────────────────────────────────────────────────────
-document.querySelectorAll('.btn-section-hide, .btn-section-show').forEach(btn => {
+
+// ── Section toggle buttons ────────────────────────────────────────────────────
+document.querySelectorAll('.btn-toggle-section').forEach(btn => {
   btn.addEventListener('click', () => {
     const target = document.getElementById(btn.dataset.target);
-    const header = btn.closest('.section-header');
-    const hideBtn = header.querySelector('.btn-section-hide');
-    const showBtn = header.querySelector('.btn-section-show');
-    if(btn.classList.contains('btn-section-hide')){
-      target.style.display = 'none';
-      hideBtn.style.display = 'none';
-      showBtn.style.display = '';
-    } else {
-      target.style.display = '';
-      hideBtn.style.display = '';
-      showBtn.style.display = 'none';
-    }
+    if(!target) return;
+    const hidden = target.style.display === 'none';
+    target.style.display = hidden ? '' : 'none';
+    btn.textContent = hidden ? 'Hide' : 'Show';
   });
 });
+
+// ── Enter key in description field → move to next row's desc ─────────────────
+document.addEventListener('keydown', e => {
+  if(e.key !== 'Enter') return;
+  const inp = e.target.closest('.desc-input');
+  if(!inp) return;
+  e.preventDefault();
+  const allInputs = [...document.querySelectorAll('.desc-input')];
+  const idx = allInputs.indexOf(inp);
+  if(idx >= 0 && idx < allInputs.length - 1) allInputs[idx + 1].focus();
+});
+
+// ── Import modal wiring ───────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay  = document.getElementById('imp-overlay');
+  const status   = document.getElementById('imp-status');
+  const tplBtn   = document.getElementById('btn-tpl');
+  const pickBtn  = document.getElementById('btn-pick');
+  const fileInp  = document.getElementById('imp-file');
+  const closeBtn = document.getElementById('btn-imp-close');
+
+  closeBtn.addEventListener('click', () => overlay.classList.remove('open'));
+  overlay.addEventListener('click', e => { if(e.target === overlay) overlay.classList.remove('open'); });
+
+  tplBtn.addEventListener('click', () => {
+    const csv = 'Subnet Address,Description\r\n10.0.0.0/16,Supernet\r\n10.0.1.0/24,Management VLAN\r\n10.0.2.0/24,Dev Environment\r\n10.0.3.0/24,Guest Wireless\r\n';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+    a.download = 'subnet_import_template.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  pickBtn.addEventListener('click', () => fileInp.click());
+
+  fileInp.addEventListener('change', () => {
+    const file = fileInp.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const lines = e.target.result.replace(/\r/g,'').split('\n').filter(l => l.trim());
+      if(!lines.length) { setStatus('File is empty.', true); return; }
+      const hdrs = parseLine(lines[0]).map(h => h.toLowerCase().trim());
+      const ci = hdrs.findIndex(h => ['subnet address','subnet','cidr','network'].includes(h));
+      const di = hdrs.findIndex(h => ['description','desc'].includes(h));
+      if(ci === -1) { setStatus('Cannot find a "Subnet Address" column.', true); return; }
+      const rows = [];
+      for(let i = 1; i < lines.length; i++) {
+        const cols = parseLine(lines[i]);
+        const cidr = (cols[ci] || '').trim();
+        if(!cidr) continue;
+        rows.push({ cidr, desc: di >= 0 ? (cols[di] || '').trim() : '' });
+      }
+      if(!rows.length) { setStatus('No data rows found.', true); return; }
+      const target = window._importTarget;
+      if(!target) { setStatus('No active section.', true); return; }
+      const err = target.doImport(rows);
+      if(err) { setStatus(err, true); }
+      else {
+        setStatus('\u2713 Imported ' + rows.length + ' subnet' + (rows.length > 1 ? 's' : '') + '.', false);
+        fileInp.value = '';
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  function setStatus(msg, isErr) {
+    status.textContent = msg;
+    status.className = 'imp-status' + (isErr ? ' err' : '');
+  }
+
+  function parseLine(line) {
+    const cols = []; let cur = '', inQ = false;
+    for(let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if(c === '"') { inQ = !inQ; }
+      else if(c === ',' && !inQ) { cols.push(cur); cur = ''; }
+      else cur += c;
+    }
+    cols.push(cur);
+    return cols.map(c => c.replace(/^"|"$/g, ''));
+  }
+});
+
 </script>
 
+
+
+<div class="imp-overlay" id="imp-overlay">
+  <div class="imp-modal">
+    <h3>&#8679; Import Subnets</h3>
+    <p>
+      <strong>Step 1:</strong> Download the template CSV, fill in your data, then import it.<br>
+      Required column: <code>Subnet Address</code> (e.g. <code>10.0.0.0/24</code>).<br>
+      Optional column: <code>Description</code>.<br><br>
+      <strong>Note:</strong> Import replaces the current section's data.<br><br>
+      <strong>Row Order:</strong> The first row of network data must be your supernet (e.g. <code>10.0.0.0/16</code>). Subsequent rows should be subnets that fall within that supernet (e.g. <code>10.0.0.0/24</code>, <code>10.0.1.0/24</code>).
+    </p>
+    <div class="imp-row">
+      <button class="btn-tpl" id="btn-tpl">&#8681; Download Template</button>
+      <button class="btn-pick" id="btn-pick">&#128193; Choose CSV File&hellip;</button>
+      <input type="file" class="imp-file" id="imp-file" accept=".csv,text/csv">
+    </div>
+    <div class="imp-status" id="imp-status"></div>
+    <div class="imp-footer">
+      <button class="btn-imp-close" id="btn-imp-close">Close</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
