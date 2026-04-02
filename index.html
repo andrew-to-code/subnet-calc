@@ -387,6 +387,182 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
 <script>
 'use strict';
 
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  Compression — bit-pack tree + LZ-string (client-side only, no external deps)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── LZ-string (public domain, adapted inline) ─────────────────────────────────
+const LZString = (function(){
+  const keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+  const keyStrUri = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$';
+
+  function _compress(input, bitsPerChar, getCharFromInt) {
+    if(input == null) return '';
+    let i, val, ctx_dictionary={}, ctx_dictionaryToCreate={},
+        ctx_c='', ctx_wc='', ctx_w='',
+        ctx_enlargeIn=2, ctx_dictSize=3, ctx_numBits=2,
+        ctx_data=[], ctx_data_val=0, ctx_data_position=0, ii;
+    for(ii=0; ii<input.length; ii++){
+      ctx_c = input[ii];
+      if(!Object.prototype.hasOwnProperty.call(ctx_dictionary,ctx_c)){
+        ctx_dictionary[ctx_c]=ctx_dictSize++; ctx_dictionaryToCreate[ctx_c]=true;
+      }
+      ctx_wc=ctx_w+ctx_c;
+      if(Object.prototype.hasOwnProperty.call(ctx_dictionary,ctx_wc)){
+        ctx_w=ctx_wc;
+      } else {
+        if(Object.prototype.hasOwnProperty.call(ctx_dictionaryToCreate,ctx_w)){
+          if(ctx_w.charCodeAt(0)<256){
+            for(i=0;i<ctx_numBits;i++){ctx_data_val=(ctx_data_val<<1);if(ctx_data_position==bitsPerChar-1){ctx_data_position=0;ctx_data.push(getCharFromInt(ctx_data_val));ctx_data_val=0;}else{ctx_data_position++;}}
+            val=ctx_w.charCodeAt(0);
+            for(i=0;i<8;i++){ctx_data_val=(ctx_data_val<<1)|(val&1);val>>=1;if(ctx_data_position==bitsPerChar-1){ctx_data_position=0;ctx_data.push(getCharFromInt(ctx_data_val));ctx_data_val=0;}else{ctx_data_position++;}}
+          } else {
+            val=1;
+            for(i=0;i<ctx_numBits;i++){ctx_data_val=(ctx_data_val<<1)|val;if(ctx_data_position==bitsPerChar-1){ctx_data_position=0;ctx_data.push(getCharFromInt(ctx_data_val));ctx_data_val=0;}else{ctx_data_position++;}val=0;}
+            val=ctx_w.charCodeAt(0);
+            for(i=0;i<16;i++){ctx_data_val=(ctx_data_val<<1)|(val&1);val>>=1;if(ctx_data_position==bitsPerChar-1){ctx_data_position=0;ctx_data.push(getCharFromInt(ctx_data_val));ctx_data_val=0;}else{ctx_data_position++;}}
+          }
+          ctx_enlargeIn--;if(ctx_enlargeIn==0){ctx_enlargeIn=Math.pow(2,ctx_numBits);ctx_numBits++;}
+          delete ctx_dictionaryToCreate[ctx_w];
+        } else {
+          val=ctx_dictionary[ctx_w];
+          for(i=0;i<ctx_numBits;i++){ctx_data_val=(ctx_data_val<<1)|(val&1);val>>=1;if(ctx_data_position==bitsPerChar-1){ctx_data_position=0;ctx_data.push(getCharFromInt(ctx_data_val));ctx_data_val=0;}else{ctx_data_position++;}}
+        }
+        ctx_enlargeIn--;if(ctx_enlargeIn==0){ctx_enlargeIn=Math.pow(2,ctx_numBits);ctx_numBits++;}
+        ctx_dictionary[ctx_wc]=ctx_dictSize++;
+        ctx_w=String(ctx_c);
+      }
+    }
+    if(ctx_w!==''){
+      if(Object.prototype.hasOwnProperty.call(ctx_dictionaryToCreate,ctx_w)){
+        if(ctx_w.charCodeAt(0)<256){
+          for(i=0;i<ctx_numBits;i++){ctx_data_val=(ctx_data_val<<1);if(ctx_data_position==bitsPerChar-1){ctx_data_position=0;ctx_data.push(getCharFromInt(ctx_data_val));ctx_data_val=0;}else{ctx_data_position++;}}
+          val=ctx_w.charCodeAt(0);
+          for(i=0;i<8;i++){ctx_data_val=(ctx_data_val<<1)|(val&1);val>>=1;if(ctx_data_position==bitsPerChar-1){ctx_data_position=0;ctx_data.push(getCharFromInt(ctx_data_val));ctx_data_val=0;}else{ctx_data_position++;}}
+        } else {
+          val=1;
+          for(i=0;i<ctx_numBits;i++){ctx_data_val=(ctx_data_val<<1)|val;if(ctx_data_position==bitsPerChar-1){ctx_data_position=0;ctx_data.push(getCharFromInt(ctx_data_val));ctx_data_val=0;}else{ctx_data_position++;}val=0;}
+          val=ctx_w.charCodeAt(0);
+          for(i=0;i<16;i++){ctx_data_val=(ctx_data_val<<1)|(val&1);val>>=1;if(ctx_data_position==bitsPerChar-1){ctx_data_position=0;ctx_data.push(getCharFromInt(ctx_data_val));ctx_data_val=0;}else{ctx_data_position++;}}
+        }
+        ctx_enlargeIn--;if(ctx_enlargeIn==0){ctx_enlargeIn=Math.pow(2,ctx_numBits);ctx_numBits++;}
+        delete ctx_dictionaryToCreate[ctx_w];
+      } else {
+        val=ctx_dictionary[ctx_w];
+        for(i=0;i<ctx_numBits;i++){ctx_data_val=(ctx_data_val<<1)|(val&1);val>>=1;if(ctx_data_position==bitsPerChar-1){ctx_data_position=0;ctx_data.push(getCharFromInt(ctx_data_val));ctx_data_val=0;}else{ctx_data_position++;}}
+      }
+      ctx_enlargeIn--;if(ctx_enlargeIn==0){ctx_enlargeIn=Math.pow(2,ctx_numBits);ctx_numBits++;}
+    }
+    val=2;
+    for(i=0;i<ctx_numBits;i++){ctx_data_val=(ctx_data_val<<1)|(val&1);val>>=1;if(ctx_data_position==bitsPerChar-1){ctx_data_position=0;ctx_data.push(getCharFromInt(ctx_data_val));ctx_data_val=0;}else{ctx_data_position++;}}
+    while(true){ctx_data_val=(ctx_data_val<<1);if(ctx_data_position==bitsPerChar-1){ctx_data.push(getCharFromInt(ctx_data_val));break;}else{ctx_data_position++;}}
+    return ctx_data.join('');
+  }
+
+  function _decompress(length, resetValue, getNextValue){
+    let dictionary=[], next, enlargeIn=4, dictSize=4, numBits=3,
+        entry='', result=[], i, w, bits, resb, maxpower, power, c,
+        data={val:getNextValue(0), position:resetValue, index:1};
+    for(i=0;i<3;i++) dictionary[i]=i;
+    bits=0; maxpower=Math.pow(2,2); power=1;
+    while(power!=maxpower){resb=data.val&data.position;data.position>>=1;if(data.position==0){data.position=resetValue;data.val=getNextValue(data.index++);}bits|=(resb>0?1:0)*power;power<<=1;}
+    switch(next=bits){
+      case 0:
+        bits=0;maxpower=Math.pow(2,8);power=1;
+        while(power!=maxpower){resb=data.val&data.position;data.position>>=1;if(data.position==0){data.position=resetValue;data.val=getNextValue(data.index++);}bits|=(resb>0?1:0)*power;power<<=1;}
+        c=String.fromCharCode(bits); break;
+      case 1:
+        bits=0;maxpower=Math.pow(2,16);power=1;
+        while(power!=maxpower){resb=data.val&data.position;data.position>>=1;if(data.position==0){data.position=resetValue;data.val=getNextValue(data.index++);}bits|=(resb>0?1:0)*power;power<<=1;}
+        c=String.fromCharCode(bits); break;
+      case 2: return '';
+    }
+    dictionary[3]=c; w=c; result.push(c);
+    while(true){
+      if(data.index>length) return '';
+      bits=0;maxpower=Math.pow(2,numBits);power=1;
+      while(power!=maxpower){resb=data.val&data.position;data.position>>=1;if(data.position==0){data.position=resetValue;data.val=getNextValue(data.index++);}bits|=(resb>0?1:0)*power;power<<=1;}
+      switch(c=bits){
+        case 0:
+          bits=0;maxpower=Math.pow(2,8);power=1;
+          while(power!=maxpower){resb=data.val&data.position;data.position>>=1;if(data.position==0){data.position=resetValue;data.val=getNextValue(data.index++);}bits|=(resb>0?1:0)*power;power<<=1;}
+          dictionary[dictSize++]=String.fromCharCode(bits);c=dictSize-1;enlargeIn--;break;
+        case 1:
+          bits=0;maxpower=Math.pow(2,16);power=1;
+          while(power!=maxpower){resb=data.val&data.position;data.position>>=1;if(data.position==0){data.position=resetValue;data.val=getNextValue(data.index++);}bits|=(resb>0?1:0)*power;power<<=1;}
+          dictionary[dictSize++]=String.fromCharCode(bits);c=dictSize-1;enlargeIn--;break;
+        case 2: return result.join('');
+      }
+      if(enlargeIn==0){enlargeIn=Math.pow(2,numBits);numBits++;}
+      if(dictionary[c]){entry=dictionary[c];}else{if(c===dictSize){entry=w+w[0];}else{return null;}}
+      result.push(entry);dictionary[dictSize++]=w+entry[0];enlargeIn--;w=entry;
+      if(enlargeIn==0){enlargeIn=Math.pow(2,numBits);numBits++;}
+    }
+  }
+
+  return {
+    compressToEncodedURIComponent: function(input){
+      if(input==null) return '';
+      return _compress(input, 6, c => keyStrUri[c]) + '~';
+    },
+    decompressFromEncodedURIComponent: function(input){
+      if(input==null) return '';
+      input = input.replace(/ /g, '+');
+      if(input.slice(-1)==='~') input=input.slice(0,-1);
+      return _decompress(input.length, 32, idx => {
+        const s = keyStrUri.indexOf(input[idx]);
+        return s === -1 ? 0 : s;
+      }) || '';
+    }
+  };
+})();
+
+// ── Bit-pack tree serialisation ───────────────────────────────────────────────
+// Encodes D/L string as bits → base64url, then LZ-compresses the result.
+// Falls back gracefully on decode.
+
+function packTree(dlStr){
+  // Convert D/L string to bit array: D=1, L=0
+  let bits = [], i;
+  for(i = 0; i < dlStr.length; i++) bits.push(dlStr[i] === 'D' ? 1 : 0);
+  // Pack bits into bytes
+  const bytes = [];
+  for(i = 0; i < bits.length; i += 8){
+    let byte = 0;
+    for(let j = 0; j < 8; j++) byte = (byte << 1) | (bits[i+j] || 0);
+    bytes.push(byte);
+  }
+  // Store length prefix + bytes as base64url
+  const lenStr = dlStr.length.toString(36) + ':'; // base36 length
+  const b64 = btoa(lenStr + bytes.map(b => String.fromCharCode(b)).join(''));
+  // Then LZ-compress the base64 string
+  return LZString.compressToEncodedURIComponent(b64);
+}
+
+function unpackTree(packed){
+  try {
+    // Try new compressed format first
+    const b64 = LZString.decompressFromEncodedURIComponent(packed);
+    if(b64){
+      const raw = atob(b64);
+      const colon = raw.indexOf(':');
+      if(colon !== -1){
+        const len = parseInt(raw.slice(0, colon), 36);
+        const byteStr = raw.slice(colon + 1);
+        let bits = [];
+        for(let i = 0; i < byteStr.length; i++){
+          const byte = byteStr.charCodeAt(i);
+          for(let j = 7; j >= 0; j--) bits.push((byte >> j) & 1);
+        }
+        return bits.slice(0, len).map(b => b ? 'D' : 'L').join('');
+      }
+    }
+  } catch(e){}
+  // Fall back: treat as raw D/L string (old format)
+  return packed;
+}
+
 // ── IP helpers (shared) ────────────────────────────────────────────────────────
 const ipToNum   = ip => ip.split('.').reduce((a,o)=>(a<<8)+parseInt(o,10),0)>>>0;
 const numToIp   = n  => [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.');
@@ -853,7 +1029,7 @@ function buildFullUrl(){
     const state = inst.getState();
     if(!state) return;
     params.set(`${prefix}n`, state.cidr);
-    if(state.division) params.set(`${prefix}d`, state.division);
+    if(state.division) params.set(`${prefix}d`, packTree(state.division));
     if(state.descs)    params.set(`${prefix}desc`, state.descs);
     if(state.hi)       params.set(`${prefix}hi`, state.hi);
   });
@@ -877,7 +1053,7 @@ function updateAllPermalinks(){
     const division = p.get(`${prefix}d`) || '';
     const descs    = p.get(`${prefix}desc`) || '';
     const hi       = p.get(`${prefix}hi`) || '';
-    inst.restoreState({cidr, division, descs, hi});
+    inst.restoreState({cidr, division: division ? unpackTree(division) : '', descs, hi});
   });
 })();
 
