@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Subnet Network Tool</title>
+<title>IPv4 Network Tool</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -13,7 +13,7 @@ body {
   color: #000;
   padding: 10px 14px 32px;
 }
-h1 { font-size: 22px; margin-bottom: 10px; color: #1a3a5c; }
+h1 { font-size: 26px; margin-bottom: 10px; color: #1a3a5c; }
 
 /* ── Top bar ── */
 .inst-topbar {
@@ -91,6 +91,17 @@ td.tree-cell { padding-left: 4px !important; white-space: nowrap; width: 1px; }
   font-weight: 600; color: #152840;
   font-family: 'Courier New', monospace; font-size: 12px;
 }
+
+/* VLAN input */
+.vlan-input {
+  padding: 0 2px; font-size: 11px; height: 18px;
+  box-sizing: border-box; width: 52px;
+  border: 1px solid transparent; background: transparent;
+  border-radius: 2px; text-align: center;
+}
+.vlan-input:hover  { border-color: #9cbce0; background: rgba(255,255,255,.6); }
+.vlan-input:focus  { border-color: #2e6fba; background: #fff; outline: none; }
+
 
 /* Desc input */
 .desc-input {
@@ -264,6 +275,24 @@ td.tree-cell { padding-left: 4px !important; white-space: nowrap; width: 1px; }
   padding:4px 14px; cursor:pointer; font-size:12px; border-radius:3px;
 }
 .btn-imp-close:hover { background:#555; }
+/* ── RFC reference mini-tables ── */
+table.rfc-table {
+  border-collapse: collapse; margin-top: 5px; margin-bottom: 2px;
+  font-size: 11px; width: 100%;
+}
+table.rfc-table th {
+  background: #4a7ab5; color: #fff;
+  padding: 2px 8px; text-align: left; font-size: 11px;
+  border-bottom: 1px solid #1e52a0; white-space: nowrap;
+}
+table.rfc-table td {
+  padding: 1px 8px; border-bottom: 1px solid #dde8f8;
+  font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.4;
+}
+table.rfc-table td:last-child { font-family: inherit; }
+table.rfc-table tbody tr:nth-child(even) td { background: #f0f5fb; }
+table.rfc-table tbody tr:hover td { background: #d0e6ff !important; }
+
 /* ── Section toggle buttons ── */
 .btn-toggle-section {
   background: #7aaad8; color: #fff;
@@ -273,7 +302,133 @@ td.tree-cell { padding-left: 4px !important; white-space: nowrap; width: 1px; }
   margin-left: 8px; vertical-align: middle;
 }
 .btn-toggle-section:hover { background: #4a7ab5; }
-/* ── Subnet Mask Reference Table ── */
+/* ── Theme toggle button ── */
+#theme-toggle {
+  background: none; border: 1px solid #a8c0e8; border-radius: 20px;
+  padding: 4px 12px; cursor: pointer; font-size: 13px; color: #334;
+  white-space: nowrap; transition: background .15s, color .15s;
+}
+#theme-toggle:hover { background: #c8d8ee; }
+
+/* ── Reference section base (light mode) ── */
+.ref-col-heading { color: #334; }
+.rfc-content     { color: #334; }
+.rfc-badge       { color: #778; }
+.rfc-note        { color: #778; }
+
+/* ── Dark mode ── */
+body.dark {
+  background: #16191f;
+  color: #dde4f2;
+}
+body.dark h1 { color: #a4ccee; }
+body.dark hr { border-top-color: #2c3f58 !important; }
+body.dark #theme-toggle { border-color: #3a526e; color: #a4c0d8; background: #1e2533; }
+body.dark #theme-toggle:hover { background: #263040; }
+
+/* toolbar / state bar / ref box */
+body.dark .inst-topbar,
+body.dark .state-bar,
+body.dark #mask-ref-wrap {
+  background: #1e2533; border-color: #2c3f58;
+}
+body.dark .inst-topbar label,
+body.dark .col-toggles-wrap > b,
+body.dark .col-toggles-wrap label,
+body.dark .sb-lbl { color: #b0c8e0; }
+body.dark .inst-topbar input[type=text] {
+  background: #111622; border-color: #2c3f58; color: #dde4f2;
+}
+body.dark .state-bar-header { border-bottom-color: #2c3f58; }
+body.dark .state-bar-left   { border-right-color: #2c3f58; }
+body.dark .col-toggles-wrap { border-left-color: #2c3f58; }
+body.dark .error-msg        { color: #f08080; }
+
+/* subnet table header */
+body.dark table.subnet-table th { background: #1c3a60; border-bottom-color: #112a4a; }
+body.dark table.subnet-table td { border-bottom-color: #222c3c; }
+
+/* row depth shading */
+body.dark tr.d-0 td { background: #18202e; }
+body.dark tr.d-1 td { background: #1b2535; }
+body.dark tr.d-2 td { background: #1e293c; }
+body.dark tr.d-3 td { background: #202d42; }
+body.dark tr.d-4 td { background: #223148; }
+body.dark tr.d-5 td { background: #24354e; }
+body.dark tr.sn-row:hover td { filter: brightness(1.2); }
+
+/* no-desc (grey) and highlighted (yellow) rows */
+body.dark tr.sn-row.no-desc td           { background: #1c1e22 !important; color: #5a6a7a !important; }
+body.dark tr.sn-row.no-desc td .sn-addr  { color: #4a5a6a; }
+body.dark tr.sn-row.no-desc:hover td     { background: #222628 !important; }
+body.dark tr.sn-row.no-desc td input.desc-input { color: #5a6a7a; }
+body.dark tr.sn-row.row-highlighted td           { background: #3a3600 !important; color: #f5f200 !important; }
+body.dark tr.sn-row.row-highlighted td .sn-addr  { color: #f5f200; }
+body.dark tr.sn-row.row-highlighted:hover td     { background: #4a4600 !important; }
+
+/* monospace subnet address */
+body.dark .sn-addr { color: #88c0e8; }
+
+/* description / vlan inputs */
+body.dark .desc-input,
+body.dark .vlan-input { color: #dde4f2; }
+body.dark .desc-input:hover,
+body.dark .vlan-input:hover  { background: rgba(255,255,255,.07); border-color: #3a526e; }
+body.dark .desc-input:focus,
+body.dark .vlan-input:focus  { background: #111622; border-color: #5590c8; }
+
+/* join / divide buttons */
+body.dark .btn-join-cidr               { background: #1c4878; color: #c8dff4; }
+body.dark .btn-join-cidr:hover         { background: #2a64aa; }
+body.dark .join-label-inactive         { background: #16202c; color: #304050; }
+body.dark .join-col-cell               { border-left-color: #2c3f58; }
+body.dark .join-col-cell:first-of-type { border-left-color: #1c3a60; }
+body.dark .btn-divide                  { background: #1c4878; border-color: #112a4a; }
+body.dark .btn-divide:hover:not(:disabled) { background: #2a64aa; }
+
+/* state bar text */
+body.dark .permalink         { color: #6ab0e8; }
+body.dark a.permalink:hover  { color: #90ccff; }
+body.dark .hi  { color: #4a6a88; }
+body.dark .hl  { color: #9abcd4; }
+body.dark .ht  { color: #4a6a88; }
+body.dark .btn-restore       { background: #1a5c38; border-color: #124028; }
+body.dark .btn-restore:hover { background: #226844; }
+
+/* subnet mask reference table */
+body.dark table.mask-ref-table td {
+  border-color: #2c3f58; color: #c8d8ec;
+}
+body.dark table.mask-ref-table tbody tr:nth-child(odd)  td { background: #18202e; }
+body.dark table.mask-ref-table tbody tr:nth-child(even) td { background: #1e2533; }
+body.dark table.mask-ref-table tbody tr.mrt-special td     { background: #112a4a !important; color: #88c0e8; }
+body.dark table.mask-ref-table tbody tr:hover td           { background: #1e3a5e !important; }
+
+/* reference section text */
+body.dark .ref-col-heading { color: #b0c8e0; }
+body.dark .rfc-content     { color: #ccd8ec; }
+body.dark .rfc-badge       { color: #7aa8c8; }
+body.dark .rfc-note        { color: #7aa8c8; border-top-color: #2c3f58 !important; }
+
+/* RFC mini-tables */
+body.dark table.rfc-table td {
+  border-color: #2c3f58; color: #ccd8ec;
+}
+body.dark table.rfc-table tbody tr:nth-child(odd)  td { background: #18202e; }
+body.dark table.rfc-table tbody tr:nth-child(even) td { background: #1e2533; }
+body.dark table.rfc-table tbody tr:hover td            { background: #1e3a5e !important; }
+
+/* modal */
+body.dark .imp-overlay { background: rgba(0,0,0,.65); }
+body.dark .imp-modal   { background: #1e2533; color: #dde4f2; }
+body.dark .imp-modal h3 { color: #a4ccee; }
+body.dark .imp-modal p  { color: #a0b8d0; }
+body.dark .imp-modal p code { background: #111622; color: #88c0e8; }
+
+/* footer */
+body.dark .page-footer   { border-top-color: #2c3f58; color: #6a8aaa; }
+body.dark .page-footer a { color: #6ab0e8; }
+
 #mask-ref-wrap {
   margin-top: 20px;
   background: #dde8f8; border: 1px solid #a8c0e8;
@@ -300,9 +455,11 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
 </head>
 <body>
 
-<h1>Subnet Network Tool</h1>
-<div style="font-size:9px;color:#778;margin:-8px 0 10px 2px;letter-spacing:.3px">Created by Andrew Spillers 2026</div>
-<hr style="border:none;border-top:2px solid #4a7ab5;margin:8px 0 16px 0">
+<div style="display:flex;align-items:center;margin-bottom:10px">
+  <h1 style="margin-bottom:0">IPv4 Network Tool</h1>
+  <button id="theme-toggle" style="margin-left:16px">🌙 Dark</button>
+</div>
+<hr style="border:none;border-top:2px solid #4a7ab5;margin:0 0 16px 0">
 
 <div class="sn-instance" id="inst-1">
   <div class="inst-topbar">
@@ -317,9 +474,10 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
       <label><input type="checkbox" class="col-toggle" data-col="range"    checked> Range</label>
       <label><input type="checkbox" class="col-toggle" data-col="useable"  checked> Useable IPs</label>
       <label><input type="checkbox" class="col-toggle" data-col="hosts"    checked> Hosts</label>
+      <label><input type="checkbox" class="col-toggle" data-col="vlan"     checked> VLAN</label>
       <label><input type="checkbox" class="col-toggle" data-col="desc"     checked> Description</label>
     </div>
-    <div style="margin-left:auto;display:flex;gap:6px"><button class="import-btn">&#8679; Import</button><button class="csv-btn">&#8681; Export CSV</button></div>
+    <div style="margin-left:auto;display:flex;gap:6px"><button class="import-btn">&#8679; Import CSV</button><button class="csv-btn">&#8681; Export CSV</button></div>
   </div>
   <div class="table-panel">
     <table class="subnet-table">
@@ -330,13 +488,15 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
           <th class="col-range">Range of addresses</th>
           <th class="col-useable">Useable IPs</th>
           <th class="col-hosts" style="text-align:right">Hosts</th>
+          <th class="col-vlan" style="white-space:nowrap;padding:2px 6px">VLAN</th>
           <th class="col-desc" style="min-width:280px">Description</th>
+          <th style="white-space:nowrap;padding:2px 4px;font-size:11px"></th>
           <th style="min-width:0;white-space:nowrap;padding:2px 4px">Divide</th>
           <th class="join-header-th" colspan="1">Join</th>
         </tr>
       </thead>
       <tbody class="subnet-tbody">
-        <tr class="no-rows"><td colspan="9">Enter a network above and click &#9654; Load.</td></tr>
+        <tr class="no-rows"><td colspan="11">Enter a network above and click &#9654; Load.</td></tr>
       </tbody>
     </table>
   </div>
@@ -364,22 +524,67 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
 
 <div id="mask-ref-wrap">
   <div style="display:flex;align-items:center;padding:8px 12px;border-bottom:1px solid #a8c0e8;">
-    <h2>Subnet Mask Reference</h2>
-    <button class="btn-toggle-section" data-target="mask-ref-body" data-label="Subnet Mask Reference">Hide</button>
+    <h2>Reference</h2>
+    <button class="btn-toggle-section" data-target="mask-ref-body" data-label="Reference">Hide</button>
   </div>
-  <div id="mask-ref-body" style="padding:8px 12px">
-  <table class="mask-ref-table">
-    <thead>
-      <tr>
-        <th>CIDR</th>
-        <th>Subnet Mask</th>
-        <th>Wildcard Mask</th>
-        <th>Total Addresses</th>
-        <th>Useable Hosts</th>
-      </tr>
-    </thead>
-    <tbody id="mask-ref-tbody"></tbody>
-  </table>
+  <div id="mask-ref-body" style="padding:8px 12px;display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+
+    <div style="flex:0 0 auto">
+      <div class="ref-col-heading" style="font-size:12px;font-weight:700;margin-bottom:4px">Subnet Mask</div>
+      <table class="mask-ref-table">
+        <thead>
+          <tr>
+            <th>CIDR</th>
+            <th>Subnet Mask</th>
+            <th>Wildcard Mask</th>
+            <th>Total Addresses</th>
+            <th>Useable Hosts</th>
+          </tr>
+        </thead>
+        <tbody id="mask-ref-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="rfc-content" style="flex:1;min-width:300px;font-size:12px;line-height:1.55">
+      <div class="ref-col-heading" style="font-size:12px;font-weight:700;margin-bottom:8px">Reserved IPv4 Ranges</div>
+
+      <div style="margin-bottom:8px">
+        <span style="font-weight:700">Private Address Space</span> <span class="rfc-badge">(RFC 1918)</span> — Used within home, office, and enterprise networks for internal communication.
+        <table class="rfc-table">
+          <thead><tr><th>Range</th><th>CIDR</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td>10.0.0.0 – 10.255.255.255</td><td>10.0.0.0/8</td><td>Large corporate/private networks</td></tr>
+            <tr><td>172.16.0.0 – 172.31.255.255</td><td>172.16.0.0/12</td><td>Medium-sized networks</td></tr>
+            <tr><td>192.168.0.0 – 192.168.255.255</td><td>192.168.0.0/16</td><td>Small/home office networks</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-bottom:6px"><span style="font-weight:700">Carrier-Grade NAT (CGNAT)</span> <span class="rfc-badge">(RFC 6598)</span> — <span style="font-family:'Courier New',monospace;font-size:11px">100.64.0.0/10</span> (100.64.0.0 – 100.127.255.255) designed for service provider internal networks.</div>
+
+      <div style="margin-bottom:6px"><span style="font-weight:700">Link-Local</span> <span class="rfc-badge">(RFC 3927)</span> — <span style="font-family:'Courier New',monospace;font-size:11px">169.254.0.0/16</span> (169.254.0.0 – 169.254.255.255) used for APIPA when a device cannot reach a DHCP server.</div>
+
+      <div style="margin-bottom:6px"><span style="font-weight:700">Loopback</span> <span class="rfc-badge">(RFC 1122)</span> — <span style="font-family:'Courier New',monospace;font-size:11px">127.0.0.0/8</span> (127.0.0.1 – 127.255.255.255) used for testing network applications on the local machine.</div>
+
+      <div style="margin-bottom:8px">
+        <span style="font-weight:700">Documentation</span> <span class="rfc-badge">(RFC 5737)</span> — Used for examples in documentation and tutorials.
+        <table class="rfc-table">
+          <thead><tr><th>CIDR</th><th>Name</th></tr></thead>
+          <tbody>
+            <tr><td>192.0.2.0/24</td><td>TEST-NET-1</td></tr>
+            <tr><td>198.51.100.0/24</td><td>TEST-NET-2</td></tr>
+            <tr><td>203.0.113.0/24</td><td>TEST-NET-3</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-bottom:6px"><span style="font-weight:700">Experimental / Reserved</span> <span class="rfc-badge">(RFC 1112)</span> — <span style="font-family:'Courier New',monospace;font-size:11px">240.0.0.0/4</span> (240.0.0.0 – 255.255.255.254) reserved for future use or experimental purposes.</div>
+
+      <div style="margin-bottom:10px"><span style="font-weight:700">Broadcast</span> — <span style="font-family:'Courier New',monospace;font-size:11px">255.255.255.255/32</span> sends packets to all hosts on a local network segment.</div>
+
+      <div class="rfc-note" style="font-size:11px;border-top:1px solid #c8d8ec;padding-top:8px">These addresses are typically blocked by ISPs and routers to prevent traffic from leaking into the public internet. &nbsp;<span style="font-weight:600;color:#4a7ab5">ARIN</span> and regional internet registries (RIRs) govern the allocation of public address space.</div>
+    </div>
+
   </div>
 </div>
 
@@ -629,7 +834,7 @@ function deserTree(str,pos,net,bits){
 function createInstance(containerEl, instIndex){
   // per-instance state
   let rootNet=null, rootBits=null, tree=null;
-  let descriptions=new Map(), collapsed=new Set(), snapshots=[];
+  let descriptions=new Map(), vlans=new Map(), collapsed=new Set(), snapshots=[];
   let highlighted=new Set();
 
   // DOM refs (scoped to this container)
@@ -663,16 +868,44 @@ function createInstance(containerEl, instIndex){
       for(let i=0;i+1<a.length;i+=2) descriptions.set(a[i],a[i+1]);
     }catch(e){}
   }
+  function serVlans(){
+    const a=[];
+    vlans.forEach((v,k)=>{ if(v) a.push(k,v); });
+    if(!a.length) return '';
+    try{ return btoa(unescape(encodeURIComponent(JSON.stringify(a)))); }catch(e){return '';}
+  }
+  function deserVlans(s){
+    vlans=new Map();
+    if(!s) return;
+    try{
+      const a=JSON.parse(decodeURIComponent(escape(atob(s))));
+      for(let i=0;i+1<a.length;i+=2) vlans.set(a[i],a[i+1]);
+    }catch(e){}
+  }
+
+  function fmtTimestamp(){
+    const d=new Date();
+    const mo=String(d.getMonth()+1).padStart(2,'0');
+    const dy=String(d.getDate()).padStart(2,'0');
+    const yr=String(d.getFullYear()).slice(-2);
+    let h=d.getHours(); const ampm=h>=12?'PM':'AM';
+    h=h%12||12;
+    const hh=String(h).padStart(2,'0');
+    const mm=String(d.getMinutes()).padStart(2,'0');
+    const ss=String(d.getSeconds()).padStart(2,'0');
+    return `${mo}/${dy}/${yr} ${hh}:${mm}:${ss} ${ampm}`;
+  }
 
   // ── Snapshots ──
   function saveSnapshot(label){
     // Capture full state at this moment
     const snap = {
       label,
-      time: new Date().toLocaleDateString(undefined,{month:'2-digit',day:'2-digit',year:'2-digit'}) + ' ' + new Date().toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit',second:'2-digit'}),
+      time: fmtTimestamp(),
       tree: tree ? serTree(tree) : null,
       rootNet, rootBits,
       descs: serDescs(),
+      vlansSer: serVlans(),
       hi: [...highlighted].join(','),
       cidr: tree ? `${numToIp(rootNet)}/${rootBits}` : ''
     };
@@ -703,6 +936,9 @@ function createInstance(containerEl, instIndex){
         // Restore descriptions
         descriptions=new Map();
         if(snap.descs) deserDescs(snap.descs);
+        // Restore vlans
+        vlans=new Map();
+        if(snap.vlansSer) deserVlans(snap.vlansSer);
         // Restore highlights
         highlighted=new Set();
         if(snap.hi) snap.hi.split(',').forEach(k=>{ if(k) highlighted.add(k); });
@@ -710,7 +946,8 @@ function createInstance(containerEl, instIndex){
         render();
       });
       li.innerHTML=`<span class="hi">#${idx}</span>`+
-                   `<span class="hl">${esc(snap.label)}</span>`;
+                   `<span class="hl">${esc(snap.label)}</span>`+
+                   `<span style="color:#bbb;font-size:11px;flex-shrink:0;padding:0 2px">&rarr;</span>`;
       const wrap=document.createElement('span');
       wrap.className='ht-wrap';
       const ts=document.createElement('span');
@@ -737,7 +974,7 @@ function createInstance(containerEl, instIndex){
   function renderTable(){
     tbody.innerHTML='';
     if(!tree){
-      tbody.innerHTML='<tr class="no-rows"><td colspan="9">Enter a network above and click &#9654; Load.</td></tr>';
+      tbody.innerHTML='<tr class="no-rows"><td colspan="11">Enter a network above and click &#9654; Load.</td></tr>';
       applyColVisibility(); return;
     }
 
@@ -783,7 +1020,9 @@ function createInstance(containerEl, instIndex){
         `<td class="col-range">${numToIp(net)} &ndash; ${numToIp(bcast)}</td>`+
         `<td class="col-useable">${useStr}</td>`+
         `<td class="col-hosts" style="text-align:right">${useH.toLocaleString()}</td>`+
+        `<td class="col-vlan" style="padding:0 3px;width:1px"><input class="vlan-input" type="text" maxlength="10" placeholder="VLAN" value="${esc(vlans.get(k)||'')}" data-key="${k}"></td>`+
         `<td class="col-desc"><input class="desc-input" type="text" placeholder="Add description&hellip;" value="${esc(desc)}" data-key="${k}"></td>`+
+        `<td style="white-space:nowrap;padding:0 4px;font-family:'Courier New',monospace;font-size:11px;color:#557;width:1px">/${bits}</td>`+
         `<td style="white-space:nowrap;padding:0 3px"><button class="btn-divide" data-net="${net}" data-bits="${bits}" ${bits<32?'':'disabled'}>Divide</button></td>`;
 
       for(let colIdx=0;colIdx<Math.max(colCount,1);colIdx++){
@@ -795,6 +1034,9 @@ function createInstance(containerEl, instIndex){
         if(cell){
           td.rowSpan=cell.span;
           td.innerHTML=`<button class="btn-join-cidr" data-net="${cell.net}" data-bits="${cell.bits}">/${cell.bits}</button>`;
+        } else {
+          const leafBitsForCol = maxLeafBits - colIdx - 1;
+          td.innerHTML=`<span class="join-label-inactive">/${leafBitsForCol}</span>`;
         }
         tr.appendChild(td);
       }
@@ -816,7 +1058,7 @@ function createInstance(containerEl, instIndex){
     const bits=parseInt(mStr);
     rootNet=netAddr(nStr,bits); rootBits=bits;
     tree=makeLeaf(rootNet,bits);
-    descriptions=new Map(); collapsed=new Set(); highlighted=new Set();
+    descriptions=new Map(); collapsed=new Set(); highlighted=new Set(); vlans=new Map();
     render();
   }
 
@@ -853,6 +1095,7 @@ function createInstance(containerEl, instIndex){
     descriptions = new Map();
     highlighted = new Set();
     collapsed = new Set();
+    vlans = new Map();
     rows.forEach(row => {
       const s = row.cidr.lastIndexOf('/');
       if(s === -1) return;
@@ -861,6 +1104,7 @@ function createInstance(containerEl, instIndex){
       if(isNaN(rBits)) return;
       _insertLeaf(tree, rNet, rBits);
       if(row.desc) descriptions.set(key(rNet, rBits), row.desc);
+      if(row.vlan) vlans.set(key(rNet, rBits), row.vlan);
     });
     render();
     return null;
@@ -878,7 +1122,7 @@ function createInstance(containerEl, instIndex){
     if(!tree){ alert('No network loaded.'); return; }
     const leaves = [];
     getLeaves(tree, leaves);
-    const rows = [['Subnet Address','Netmask','Range Start','Range End','Useable Start','Useable End','Hosts','Description']];
+    const rows = [['Subnet Address','Netmask','Range Start','Range End','Useable Start','Useable End','Hosts','VLAN','Description']];
     // First row: the root supernet
     const rootBcast = bcastAddr(rootNet, rootBits);
     rows.push([
@@ -889,6 +1133,7 @@ function createInstance(containerEl, instIndex){
       rootBits <= 30 ? numToIp(rootNet + 1) : numToIp(rootNet),
       rootBits <= 30 ? numToIp(rootBcast - 1) : numToIp(rootBcast),
       hostCount(rootBits).toString(),
+      '',
       '"Supernet"'
     ]);
     leaves.forEach(node => {
@@ -897,6 +1142,7 @@ function createInstance(containerEl, instIndex){
       const useH   = hostCount(bits);
       const firstU = bits <= 30 ? net + 1 : net;
       const lastU  = bits <= 30 ? bcast - 1 : bcast;
+      const vlan   = vlans.get(key(net,bits)) || '';
       const desc   = (descriptions.get(key(net,bits)) || '').replace(/"/g, '""');
       rows.push([
         `${numToIp(net)}/${bits}`,
@@ -906,6 +1152,7 @@ function createInstance(containerEl, instIndex){
         bits <= 30 ? numToIp(firstU) : numToIp(net),
         bits <= 30 ? numToIp(lastU)  : numToIp(bcast),
         useH.toString(),
+        vlan,
         `"${desc}"`
       ]);
     });
@@ -921,9 +1168,9 @@ function createInstance(containerEl, instIndex){
 
   clearBtn.addEventListener('click',()=>{
     rootNet=null; rootBits=null; tree=null;
-    descriptions=new Map(); collapsed=new Set(); snapshots=[]; highlighted=new Set();
+    descriptions=new Map(); collapsed=new Set(); snapshots=[]; highlighted=new Set(); vlans=new Map();
     cidrInput.value=''; errEl.textContent='';
-    tbody.innerHTML='<tr class="no-rows"><td colspan="9">Enter a network above and click &#9654; Load.</td></tr>';
+    tbody.innerHTML='<tr class="no-rows"><td colspan="11">Enter a network above and click &#9654; Load.</td></tr>';
     histList.innerHTML=''; histSec.style.display='none';
     if(typeof updateAllPermalinks==='function') updateAllPermalinks();
   });
@@ -956,6 +1203,15 @@ function createInstance(containerEl, instIndex){
     if(typeof updateAllPermalinks==='function') updateAllPermalinks();
   });
 
+  tbody.addEventListener('input',e=>{
+    const inp=e.target.closest('.vlan-input');
+    if(!inp) return;
+    const v=inp.value;
+    if(v.trim()) vlans.set(inp.dataset.key, v);
+    else vlans.delete(inp.dataset.key);
+    if(typeof updateAllPermalinks==='function') updateAllPermalinks();
+  });
+
   qa('.col-toggle').forEach(chk=>chk.addEventListener('change',()=>{
     applyColVisibility();
     if(typeof updateAllPermalinks==='function') updateAllPermalinks();
@@ -966,12 +1222,13 @@ function createInstance(containerEl, instIndex){
     if(!tree) return null;
     const division = serTree(tree);
     const descs    = serDescs();
+    const vlansSer = serVlans();
     const hiArr    = [...highlighted].filter(Boolean);
     const hi       = hiArr.length ? hiArr.join(',') : '';
-    return { cidr: `${numToIp(rootNet)}/${rootBits}`, division, descs, hi };
+    return { cidr: `${numToIp(rootNet)}/${rootBits}`, division, descs, vlans: vlansSer, hi };
   }
 
-  function restoreState({cidr, division, descs, hi}){
+  function restoreState({cidr, division, descs, vlans: vlansSer, hi}){
     const slash = cidr.lastIndexOf('/');
     if(slash===-1) return;
     const nStr=cidr.slice(0,slash).trim(), mStr=cidr.slice(slash+1).trim();
@@ -982,6 +1239,7 @@ function createInstance(containerEl, instIndex){
     tree=makeLeaf(rootNet,bits);
     if(division){ try{ tree=deserTree(division,{i:0},rootNet,rootBits); }catch(e){} }
     if(descs) deserDescs(descs);
+    if(vlansSer) deserVlans(vlansSer); else vlans=new Map();
     if(hi){ hi.split(',').forEach(k=>{ if(k) highlighted.add(k); }); }
     descriptions=descriptions; collapsed=new Set();
     render();
@@ -1031,6 +1289,7 @@ function buildFullUrl(){
     params.set(`${prefix}n`, state.cidr);
     if(state.division) params.set(`${prefix}d`, packTree(state.division));
     if(state.descs)    params.set(`${prefix}desc`, state.descs);
+    if(state.vlans)    params.set(`${prefix}vl`, state.vlans);
     if(state.hi)       params.set(`${prefix}hi`, state.hi);
   });
   const qs = params.toString();
@@ -1052,8 +1311,9 @@ function updateAllPermalinks(){
     if(!cidr) return;
     const division = p.get(`${prefix}d`) || '';
     const descs    = p.get(`${prefix}desc`) || '';
+    const vlansSer = p.get(`${prefix}vl`) || '';
     const hi       = p.get(`${prefix}hi`) || '';
-    inst.restoreState({cidr, division: division ? unpackTree(division) : '', descs, hi});
+    inst.restoreState({cidr, division: division ? unpackTree(division) : '', descs, vlans: vlansSer, hi});
   });
 })();
 
@@ -1080,6 +1340,22 @@ function updateAllPermalinks(){
   }
 })();
 
+
+// ── Theme toggle ──────────────────────────────────────────────────────────────
+(function(){
+  const btn = document.getElementById('theme-toggle');
+  if(!btn) return;
+  const applyTheme = dark => {
+    document.body.classList.toggle('dark', dark);
+    btn.textContent = dark ? '☀️ Light' : '🌙 Dark';
+    try{ localStorage.setItem('sn_theme', dark ? 'dark' : 'light'); }catch(e){}
+  };
+  // Restore saved preference
+  let saved = 'light';
+  try{ saved = localStorage.getItem('sn_theme') || 'light'; }catch(e){}
+  applyTheme(saved === 'dark');
+  btn.addEventListener('click', () => applyTheme(!document.body.classList.contains('dark')));
+})();
 
 // ── Section toggle buttons ────────────────────────────────────────────────────
 document.querySelectorAll('.btn-toggle-section').forEach(btn => {
@@ -1116,7 +1392,7 @@ document.addEventListener('DOMContentLoaded', () => {
   overlay.addEventListener('click', e => { if(e.target === overlay) overlay.classList.remove('open'); });
 
   tplBtn.addEventListener('click', () => {
-    const csv = 'Subnet Address,Description\r\n10.0.0.0/16,Supernet\r\n10.0.1.0/24,Management VLAN\r\n10.0.2.0/24,Dev Environment\r\n10.0.3.0/24,Guest Wireless\r\n';
+    const csv = 'Subnet Address,VLAN,Description\r\n10.0.0.0/16,,Supernet\r\n10.0.1.0/24,10,Management VLAN\r\n10.0.2.0/24,20,Dev Environment\r\n10.0.3.0/24,30,Guest Wireless\r\n';
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
     a.download = 'subnet_import_template.csv';
@@ -1136,13 +1412,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const hdrs = parseLine(lines[0]).map(h => h.toLowerCase().trim());
       const ci = hdrs.findIndex(h => ['subnet address','subnet','cidr','network'].includes(h));
       const di = hdrs.findIndex(h => ['description','desc'].includes(h));
+      const vi = hdrs.findIndex(h => ['vlan','vlan id','vlan_id'].includes(h));
       if(ci === -1) { setStatus('Cannot find a "Subnet Address" column.', true); return; }
       const rows = [];
       for(let i = 1; i < lines.length; i++) {
         const cols = parseLine(lines[i]);
         const cidr = (cols[ci] || '').trim();
         if(!cidr) continue;
-        rows.push({ cidr, desc: di >= 0 ? (cols[di] || '').trim() : '' });
+        rows.push({ cidr, desc: di >= 0 ? (cols[di] || '').trim() : '', vlan: vi >= 0 ? (cols[vi] || '').trim() : '' });
       }
       if(!rows.length) { setStatus('No data rows found.', true); return; }
       const target = window._importTarget;
@@ -1185,7 +1462,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <p>
       <strong>Step 1:</strong> Download the template CSV, fill in your data, then import it.<br>
       Required column: <code>Subnet Address</code> (e.g. <code>10.0.0.0/24</code>).<br>
-      Optional column: <code>Description</code>.<br><br>
+      Optional columns: <code>VLAN</code> and <code>Description</code>.<br><br>
       <strong>Note:</strong> Import replaces the current section's data.<br><br>
       <strong>Row Order:</strong> The first row of network data must be your supernet (e.g. <code>10.0.0.0/16</code>). Subsequent rows should be subnets that fall within that supernet (e.g. <code>10.0.0.0/24</code>, <code>10.0.1.0/24</code>).
     </p>
@@ -1200,5 +1477,10 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>
 </div>
+<div class="page-footer" style="margin-top:28px;padding-top:10px;border-top:1px solid #d0dcea;font-size:13px;color:#778;text-align:left;line-height:1.8">
+  Created by <a href="https://github.com/andrew-to-code/subnet-calc" target="_blank" rel="noopener" style="color:#4a7ab5;text-decoration:none">andrew-to-code</a> 2026<br>
+  <a href="https://andrew-to-code.github.io/subnet-calc/" target="_blank" rel="noopener" style="color:#4a7ab5;text-decoration:none">https://andrew-to-code.github.io/subnet-calc/</a>
+</div>
+
 </body>
 </html>
