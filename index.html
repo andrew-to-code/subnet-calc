@@ -464,6 +464,25 @@ table.mask-ref-table tbody tr:nth-child(odd)  td { background: #fff; }
 table.mask-ref-table tbody tr:nth-child(even) td { background: #f0f5fb; }
 table.mask-ref-table tbody tr.mrt-special td { background: #dce8f8 !important; font-weight: 700; color: #0f2e56; }
 table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor: default; }
+
+/* ── Sheet description bar ── */
+.sheet-desc-bar {
+  display: flex; align-items: center; gap: 8px;
+  background: #eef3fb; border: 1px solid #a8c0e8;
+  border-radius: 4px; padding: 5px 10px; margin-bottom: 8px;
+}
+.sheet-desc-bar label { font-weight: 700; color: #334; white-space: nowrap; font-size: 13px; }
+.sheet-desc-input {
+  flex: 1; border: 1px solid transparent; background: transparent;
+  font-size: 13px; padding: 2px 6px; border-radius: 3px; color: #334;
+}
+.sheet-desc-input:hover { border-color: #9cbce0; background: rgba(255,255,255,.7); }
+.sheet-desc-input:focus { border-color: #2e6fba; background: #fff; outline: none; }
+body.dark .sheet-desc-bar  { background: #1a2230; border-color: #2c3f58; }
+body.dark .sheet-desc-bar label { color: #b0c8e0; }
+body.dark .sheet-desc-input { color: #dde4f2; }
+body.dark .sheet-desc-input:hover { background: rgba(255,255,255,.07); border-color: #3a526e; }
+body.dark .sheet-desc-input:focus { background: #111622; border-color: #5590c8; }
 </style>
 </head>
 <body>
@@ -492,6 +511,10 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
       <label><input type="checkbox" class="col-toggle" data-col="desc"     checked> Description</label>
     </div>
     <div style="margin-left:auto;display:flex;gap:6px"><button class="import-btn">&#8679; Import CSV</button><button class="csv-btn">&#8681; Export CSV</button></div>
+  </div>
+  <div class="sheet-desc-bar">
+    <label>Description</label>
+    <input type="text" class="sheet-desc-input" placeholder="Enter a description for this sheet&hellip;">
   </div>
   <div class="table-panel">
     <table class="subnet-table">
@@ -867,6 +890,7 @@ function createInstance(containerEl, instIndex){
   const permalinkEl  = q('.permalink');
   const histSec      = q('.history-section');
   const histList     = q('.history-list');
+  const sheetDescInp = q('.sheet-desc-input');
 
   // ── Serialisation helpers ──
   function serDescs(){
@@ -1209,6 +1233,7 @@ function createInstance(containerEl, instIndex){
     rootNet=null; rootBits=null; tree=null;
     descriptions=new Map(); collapsed=new Set(); snapshots=[]; highlighted=new Set(); vlans=new Map(); roots=new Map();
     cidrInput.value=''; errEl.textContent='';
+    if(sheetDescInp) sheetDescInp.value = '';
     tbody.innerHTML='<tr class="no-rows"><td colspan="12">Enter a network above and click &#9654; Load.</td></tr>';
     histList.innerHTML=''; histSec.style.display='none';
     if(typeof updateAllPermalinks==='function') updateAllPermalinks();
@@ -1222,7 +1247,10 @@ function createInstance(containerEl, instIndex){
       else if(btn.classList.contains('btn-join-cidr')) doJoinSelf(net,bits);
       return;
     }
-    if(e.target.closest('.desc-input')) return;
+    if(e.target.closest('button')) return; // already handled above
+    // Don't highlight when clicking anywhere inside a cell that has an editable input
+    const tdClicked = e.target.closest('td');
+    if(tdClicked && tdClicked.querySelector('.desc-input, .vlan-input, .root-input')) return;
     const tr=e.target.closest('tr.sn-row');
     if(!tr) return;
     const k=tr.dataset.key; if(!k) return;
@@ -1265,6 +1293,10 @@ function createInstance(containerEl, instIndex){
     if(typeof updateAllPermalinks==='function') updateAllPermalinks();
   }));
 
+  if(sheetDescInp) sheetDescInp.addEventListener('input', ()=>{
+    if(typeof updateAllPermalinks==='function') updateAllPermalinks();
+  });
+
   // ── Public API ──
   function getState(){
     if(!tree) return null;
@@ -1274,10 +1306,10 @@ function createInstance(containerEl, instIndex){
     const rootsSer = serRoots();
     const hiArr    = [...highlighted].filter(Boolean);
     const hi       = hiArr.length ? hiArr.join(',') : '';
-    return { cidr: `${numToIp(rootNet)}/${rootBits}`, division, descs, vlans: vlansSer, roots: rootsSer, hi };
+    return { cidr: `${numToIp(rootNet)}/${rootBits}`, division, descs, vlans: vlansSer, roots: rootsSer, hi, sheetDesc: sheetDescInp ? sheetDescInp.value : '' };
   }
 
-  function restoreState({cidr, division, descs, vlans: vlansSer, roots: rootsSer, hi}){
+  function restoreState({cidr, division, descs, vlans: vlansSer, roots: rootsSer, hi, sheetDesc}){
     const slash = cidr.lastIndexOf('/');
     if(slash===-1) return;
     const nStr=cidr.slice(0,slash).trim(), mStr=cidr.slice(slash+1).trim();
@@ -1291,6 +1323,7 @@ function createInstance(containerEl, instIndex){
     if(vlansSer) deserVlans(vlansSer); else vlans=new Map();
     if(rootsSer) deserRoots(rootsSer); else roots=new Map();
     if(hi){ hi.split(',').forEach(k=>{ if(k) highlighted.add(k); }); }
+    if(sheetDescInp) sheetDescInp.value = sheetDesc || '';
     descriptions=descriptions; collapsed=new Set();
     render();
   }
@@ -1339,6 +1372,7 @@ function buildFullUrl(){
     params.set(`${prefix}n`, state.cidr);
     if(state.division) params.set(`${prefix}d`, packTree(state.division));
     if(state.descs)    params.set(`${prefix}desc`, state.descs);
+    if(state.sheetDesc) params.set(`${prefix}sd`, encodeURIComponent(state.sheetDesc));
     if(state.vlans)    params.set(`${prefix}vl`, state.vlans);
     if(state.roots)    params.set(`${prefix}rt`, state.roots);
     if(state.hi)       params.set(`${prefix}hi`, state.hi);
@@ -1364,8 +1398,9 @@ function updateAllPermalinks(){
     const descs    = p.get(`${prefix}desc`) || '';
     const vlansSer = p.get(`${prefix}vl`) || '';
     const rootsSer = p.get(`${prefix}rt`) || '';
+    const sheetDesc = decodeURIComponent(p.get(`${prefix}sd`) || '');
     const hi       = p.get(`${prefix}hi`) || '';
-    inst.restoreState({cidr, division: division ? unpackTree(division) : '', descs, vlans: vlansSer, roots: rootsSer, hi});
+    inst.restoreState({cidr, division: division ? unpackTree(division) : '', descs, vlans: vlansSer, roots: rootsSer, sheetDesc, hi});
   });
 })();
 
@@ -1420,15 +1455,41 @@ document.querySelectorAll('.btn-toggle-section').forEach(btn => {
   });
 });
 
-// ── Enter key in description field → move to next row's desc ─────────────────
+// ── Keyboard navigation in table cell inputs (Enter=down, Tab=right) ──────────
 document.addEventListener('keydown', e => {
-  if(e.key !== 'Enter') return;
-  const inp = e.target.closest('.desc-input');
+  const inp = e.target.closest('.desc-input, .vlan-input, .root-input');
   if(!inp) return;
-  e.preventDefault();
-  const allInputs = [...document.querySelectorAll('.desc-input')];
-  const idx = allInputs.indexOf(inp);
-  if(idx >= 0 && idx < allInputs.length - 1) allInputs[idx + 1].focus();
+
+  // Determine which column type we're in
+  const colClass = inp.classList.contains('vlan-input') ? 'vlan-input'
+                 : inp.classList.contains('root-input') ? 'root-input'
+                 : 'desc-input';
+
+  if(e.key === 'Enter') {
+    e.preventDefault();
+    // Move to same column in next row
+    const allInCol = [...document.querySelectorAll(`.${colClass}`)];
+    const idx = allInCol.indexOf(inp);
+    if(idx >= 0 && idx < allInCol.length - 1) allInCol[idx + 1].focus();
+
+  } else if(e.key === 'Tab') {
+    // Move to next editable column in same row (vlan → root → desc → vlan of next row)
+    const colOrder = ['vlan-input', 'root-input', 'desc-input'];
+    const curColIdx = colOrder.indexOf(colClass);
+    const tr = inp.closest('tr');
+    if(!tr) return;
+
+    if(curColIdx < colOrder.length - 1 && !e.shiftKey) {
+      // Move right within same row
+      const nextInput = tr.querySelector(`.${colOrder[curColIdx + 1]}`);
+      if(nextInput){ e.preventDefault(); nextInput.focus(); }
+    } else if(curColIdx > 0 && e.shiftKey) {
+      // Shift-Tab: move left within same row
+      const prevInput = tr.querySelector(`.${colOrder[curColIdx - 1]}`);
+      if(prevInput){ e.preventDefault(); prevInput.focus(); }
+    }
+    // Otherwise let browser handle Tab naturally (wrap to next/prev row)
+  }
 });
 
 // ── Import modal wiring ───────────────────────────────────────────────────────
