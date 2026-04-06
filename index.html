@@ -102,6 +102,16 @@ td.tree-cell { padding-left: 4px !important; white-space: nowrap; width: 1px; }
 .vlan-input:hover  { border-color: #9cbce0; background: rgba(255,255,255,.6); }
 .vlan-input:focus  { border-color: #2e6fba; background: #fff; outline: none; }
 
+/* Root input */
+.root-input {
+  padding: 0 2px; font-size: 11px; height: 18px;
+  box-sizing: border-box; width: 52px;
+  border: 1px solid transparent; background: transparent;
+  border-radius: 2px; text-align: center;
+}
+.root-input:hover  { border-color: #9cbce0; background: rgba(255,255,255,.6); }
+.root-input:focus  { border-color: #2e6fba; background: #fff; outline: none; }
+
 
 /* Desc input */
 .desc-input {
@@ -371,11 +381,14 @@ body.dark .sn-addr { color: #88c0e8; }
 
 /* description / vlan inputs */
 body.dark .desc-input,
-body.dark .vlan-input { color: #dde4f2; }
+body.dark .vlan-input,
+body.dark .root-input { color: #dde4f2; }
 body.dark .desc-input:hover,
-body.dark .vlan-input:hover  { background: rgba(255,255,255,.07); border-color: #3a526e; }
+body.dark .vlan-input:hover,
+body.dark .root-input:hover  { background: rgba(255,255,255,.07); border-color: #3a526e; }
 body.dark .desc-input:focus,
-body.dark .vlan-input:focus  { background: #111622; border-color: #5590c8; }
+body.dark .vlan-input:focus,
+body.dark .root-input:focus  { background: #111622; border-color: #5590c8; }
 
 /* join / divide buttons */
 body.dark .btn-join-cidr               { background: #1c4878; color: #c8dff4; }
@@ -474,7 +487,8 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
       <label><input type="checkbox" class="col-toggle" data-col="range"    checked> Range</label>
       <label><input type="checkbox" class="col-toggle" data-col="useable"  checked> Useable IPs</label>
       <label><input type="checkbox" class="col-toggle" data-col="hosts"    checked> Hosts</label>
-      <label><input type="checkbox" class="col-toggle" data-col="vlan"     checked> VLAN</label>
+      <label><input type="checkbox" class="col-toggle" data-col="vlan"     checked> Vlan</label>
+      <label><input type="checkbox" class="col-toggle" data-col="root"     checked> Root</label>
       <label><input type="checkbox" class="col-toggle" data-col="desc"     checked> Description</label>
     </div>
     <div style="margin-left:auto;display:flex;gap:6px"><button class="import-btn">&#8679; Import CSV</button><button class="csv-btn">&#8681; Export CSV</button></div>
@@ -488,7 +502,8 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
           <th class="col-range">Range of addresses</th>
           <th class="col-useable">Useable IPs</th>
           <th class="col-hosts" style="text-align:right">Hosts</th>
-          <th class="col-vlan" style="white-space:nowrap;padding:2px 6px">VLAN</th>
+          <th class="col-vlan" style="white-space:nowrap;padding:2px 6px">Vlan</th>
+          <th class="col-root" style="white-space:nowrap;padding:2px 6px">Root</th>
           <th class="col-desc" style="min-width:280px">Description</th>
           <th style="white-space:nowrap;padding:2px 4px;font-size:11px"></th>
           <th style="min-width:0;white-space:nowrap;padding:2px 4px">Divide</th>
@@ -496,7 +511,7 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
         </tr>
       </thead>
       <tbody class="subnet-tbody">
-        <tr class="no-rows"><td colspan="11">Enter a network above and click &#9654; Load.</td></tr>
+        <tr class="no-rows"><td colspan="12">Enter a network above and click &#9654; Load.</td></tr>
       </tbody>
     </table>
   </div>
@@ -834,7 +849,7 @@ function deserTree(str,pos,net,bits){
 function createInstance(containerEl, instIndex){
   // per-instance state
   let rootNet=null, rootBits=null, tree=null;
-  let descriptions=new Map(), vlans=new Map(), collapsed=new Set(), snapshots=[];
+  let descriptions=new Map(), vlans=new Map(), roots=new Map(), collapsed=new Set(), snapshots=[];
   let highlighted=new Set();
 
   // DOM refs (scoped to this container)
@@ -882,6 +897,20 @@ function createInstance(containerEl, instIndex){
       for(let i=0;i+1<a.length;i+=2) vlans.set(a[i],a[i+1]);
     }catch(e){}
   }
+  function serRoots(){
+    const a=[];
+    roots.forEach((v,k)=>{ if(v) a.push(k,v); });
+    if(!a.length) return '';
+    try{ return btoa(unescape(encodeURIComponent(JSON.stringify(a)))); }catch(e){return '';}
+  }
+  function deserRoots(s){
+    roots=new Map();
+    if(!s) return;
+    try{
+      const a=JSON.parse(decodeURIComponent(escape(atob(s))));
+      for(let i=0;i+1<a.length;i+=2) roots.set(a[i],a[i+1]);
+    }catch(e){}
+  }
 
   function fmtTimestamp(){
     const d=new Date();
@@ -906,6 +935,7 @@ function createInstance(containerEl, instIndex){
       rootNet, rootBits,
       descs: serDescs(),
       vlansSer: serVlans(),
+      rootsSer: serRoots(),
       hi: [...highlighted].join(','),
       cidr: tree ? `${numToIp(rootNet)}/${rootBits}` : ''
     };
@@ -939,6 +969,9 @@ function createInstance(containerEl, instIndex){
         // Restore vlans
         vlans=new Map();
         if(snap.vlansSer) deserVlans(snap.vlansSer);
+        // Restore roots
+        roots=new Map();
+        if(snap.rootsSer) deserRoots(snap.rootsSer);
         // Restore highlights
         highlighted=new Set();
         if(snap.hi) snap.hi.split(',').forEach(k=>{ if(k) highlighted.add(k); });
@@ -974,7 +1007,7 @@ function createInstance(containerEl, instIndex){
   function renderTable(){
     tbody.innerHTML='';
     if(!tree){
-      tbody.innerHTML='<tr class="no-rows"><td colspan="11">Enter a network above and click &#9654; Load.</td></tr>';
+      tbody.innerHTML='<tr class="no-rows"><td colspan="12">Enter a network above and click &#9654; Load.</td></tr>';
       applyColVisibility(); return;
     }
 
@@ -1020,7 +1053,8 @@ function createInstance(containerEl, instIndex){
         `<td class="col-range">${numToIp(net)} &ndash; ${numToIp(bcast)}</td>`+
         `<td class="col-useable">${useStr}</td>`+
         `<td class="col-hosts" style="text-align:right">${useH.toLocaleString()}</td>`+
-        `<td class="col-vlan" style="padding:0 3px;width:1px"><input class="vlan-input" type="text" maxlength="10" placeholder="VLAN" value="${esc(vlans.get(k)||'')}" data-key="${k}"></td>`+
+        `<td class="col-vlan" style="padding:0 3px;width:1px"><input class="vlan-input" type="text" maxlength="10" placeholder="Vlan" value="${esc(vlans.get(k)||'')}" data-key="${k}"></td>`+
+        `<td class="col-root" style="padding:0 3px;width:1px"><input class="root-input" type="text" maxlength="20" placeholder="Root" value="${esc(roots.get(k)||'')}" data-key="${k}"></td>`+
         `<td class="col-desc"><input class="desc-input" type="text" placeholder="Add description&hellip;" value="${esc(desc)}" data-key="${k}"></td>`+
         `<td style="white-space:nowrap;padding:0 4px;font-family:'Courier New',monospace;font-size:11px;color:#557;width:1px">/${bits}</td>`+
         `<td style="white-space:nowrap;padding:0 3px"><button class="btn-divide" data-net="${net}" data-bits="${bits}" ${bits<32?'':'disabled'}>Divide</button></td>`;
@@ -1058,7 +1092,7 @@ function createInstance(containerEl, instIndex){
     const bits=parseInt(mStr);
     rootNet=netAddr(nStr,bits); rootBits=bits;
     tree=makeLeaf(rootNet,bits);
-    descriptions=new Map(); collapsed=new Set(); highlighted=new Set(); vlans=new Map();
+    descriptions=new Map(); collapsed=new Set(); highlighted=new Set(); vlans=new Map(); roots=new Map();
     render();
   }
 
@@ -1096,6 +1130,7 @@ function createInstance(containerEl, instIndex){
     highlighted = new Set();
     collapsed = new Set();
     vlans = new Map();
+    roots = new Map();
     rows.forEach(row => {
       const s = row.cidr.lastIndexOf('/');
       if(s === -1) return;
@@ -1105,6 +1140,7 @@ function createInstance(containerEl, instIndex){
       _insertLeaf(tree, rNet, rBits);
       if(row.desc) descriptions.set(key(rNet, rBits), row.desc);
       if(row.vlan) vlans.set(key(rNet, rBits), row.vlan);
+      if(row.root) roots.set(key(rNet, rBits), row.root);
     });
     render();
     return null;
@@ -1122,7 +1158,7 @@ function createInstance(containerEl, instIndex){
     if(!tree){ alert('No network loaded.'); return; }
     const leaves = [];
     getLeaves(tree, leaves);
-    const rows = [['Subnet Address','Netmask','Range Start','Range End','Useable Start','Useable End','Hosts','VLAN','Description']];
+    const rows = [['Subnet Address','Netmask','Range Start','Range End','Useable Start','Useable End','Hosts','Vlan','Root','Description']];
     // First row: the root supernet
     const rootBcast = bcastAddr(rootNet, rootBits);
     rows.push([
@@ -1134,6 +1170,7 @@ function createInstance(containerEl, instIndex){
       rootBits <= 30 ? numToIp(rootBcast - 1) : numToIp(rootBcast),
       hostCount(rootBits).toString(),
       '',
+      '',
       '"Supernet"'
     ]);
     leaves.forEach(node => {
@@ -1143,6 +1180,7 @@ function createInstance(containerEl, instIndex){
       const firstU = bits <= 30 ? net + 1 : net;
       const lastU  = bits <= 30 ? bcast - 1 : bcast;
       const vlan   = vlans.get(key(net,bits)) || '';
+      const root   = roots.get(key(net,bits)) || '';
       const desc   = (descriptions.get(key(net,bits)) || '').replace(/"/g, '""');
       rows.push([
         `${numToIp(net)}/${bits}`,
@@ -1153,6 +1191,7 @@ function createInstance(containerEl, instIndex){
         bits <= 30 ? numToIp(lastU)  : numToIp(bcast),
         useH.toString(),
         vlan,
+        root,
         `"${desc}"`
       ]);
     });
@@ -1168,9 +1207,9 @@ function createInstance(containerEl, instIndex){
 
   clearBtn.addEventListener('click',()=>{
     rootNet=null; rootBits=null; tree=null;
-    descriptions=new Map(); collapsed=new Set(); snapshots=[]; highlighted=new Set(); vlans=new Map();
+    descriptions=new Map(); collapsed=new Set(); snapshots=[]; highlighted=new Set(); vlans=new Map(); roots=new Map();
     cidrInput.value=''; errEl.textContent='';
-    tbody.innerHTML='<tr class="no-rows"><td colspan="11">Enter a network above and click &#9654; Load.</td></tr>';
+    tbody.innerHTML='<tr class="no-rows"><td colspan="12">Enter a network above and click &#9654; Load.</td></tr>';
     histList.innerHTML=''; histSec.style.display='none';
     if(typeof updateAllPermalinks==='function') updateAllPermalinks();
   });
@@ -1212,6 +1251,15 @@ function createInstance(containerEl, instIndex){
     if(typeof updateAllPermalinks==='function') updateAllPermalinks();
   });
 
+  tbody.addEventListener('input',e=>{
+    const inp=e.target.closest('.root-input');
+    if(!inp) return;
+    const v=inp.value;
+    if(v.trim()) roots.set(inp.dataset.key, v);
+    else roots.delete(inp.dataset.key);
+    if(typeof updateAllPermalinks==='function') updateAllPermalinks();
+  });
+
   qa('.col-toggle').forEach(chk=>chk.addEventListener('change',()=>{
     applyColVisibility();
     if(typeof updateAllPermalinks==='function') updateAllPermalinks();
@@ -1223,12 +1271,13 @@ function createInstance(containerEl, instIndex){
     const division = serTree(tree);
     const descs    = serDescs();
     const vlansSer = serVlans();
+    const rootsSer = serRoots();
     const hiArr    = [...highlighted].filter(Boolean);
     const hi       = hiArr.length ? hiArr.join(',') : '';
-    return { cidr: `${numToIp(rootNet)}/${rootBits}`, division, descs, vlans: vlansSer, hi };
+    return { cidr: `${numToIp(rootNet)}/${rootBits}`, division, descs, vlans: vlansSer, roots: rootsSer, hi };
   }
 
-  function restoreState({cidr, division, descs, vlans: vlansSer, hi}){
+  function restoreState({cidr, division, descs, vlans: vlansSer, roots: rootsSer, hi}){
     const slash = cidr.lastIndexOf('/');
     if(slash===-1) return;
     const nStr=cidr.slice(0,slash).trim(), mStr=cidr.slice(slash+1).trim();
@@ -1240,6 +1289,7 @@ function createInstance(containerEl, instIndex){
     if(division){ try{ tree=deserTree(division,{i:0},rootNet,rootBits); }catch(e){} }
     if(descs) deserDescs(descs);
     if(vlansSer) deserVlans(vlansSer); else vlans=new Map();
+    if(rootsSer) deserRoots(rootsSer); else roots=new Map();
     if(hi){ hi.split(',').forEach(k=>{ if(k) highlighted.add(k); }); }
     descriptions=descriptions; collapsed=new Set();
     render();
@@ -1290,6 +1340,7 @@ function buildFullUrl(){
     if(state.division) params.set(`${prefix}d`, packTree(state.division));
     if(state.descs)    params.set(`${prefix}desc`, state.descs);
     if(state.vlans)    params.set(`${prefix}vl`, state.vlans);
+    if(state.roots)    params.set(`${prefix}rt`, state.roots);
     if(state.hi)       params.set(`${prefix}hi`, state.hi);
   });
   const qs = params.toString();
@@ -1312,8 +1363,9 @@ function updateAllPermalinks(){
     const division = p.get(`${prefix}d`) || '';
     const descs    = p.get(`${prefix}desc`) || '';
     const vlansSer = p.get(`${prefix}vl`) || '';
+    const rootsSer = p.get(`${prefix}rt`) || '';
     const hi       = p.get(`${prefix}hi`) || '';
-    inst.restoreState({cidr, division: division ? unpackTree(division) : '', descs, vlans: vlansSer, hi});
+    inst.restoreState({cidr, division: division ? unpackTree(division) : '', descs, vlans: vlansSer, roots: rootsSer, hi});
   });
 })();
 
@@ -1392,7 +1444,7 @@ document.addEventListener('DOMContentLoaded', () => {
   overlay.addEventListener('click', e => { if(e.target === overlay) overlay.classList.remove('open'); });
 
   tplBtn.addEventListener('click', () => {
-    const csv = 'Subnet Address,VLAN,Description\r\n10.0.0.0/16,,Supernet\r\n10.0.1.0/24,10,Management VLAN\r\n10.0.2.0/24,20,Dev Environment\r\n10.0.3.0/24,30,Guest Wireless\r\n';
+    const csv = 'Subnet Address,Vlan,Root,Description\r\n10.0.0.0/16,,,Supernet\r\n10.0.1.0/24,10,,Management Vlan\r\n10.0.2.0/24,20,,Dev Environment\r\n10.0.3.0/24,30,,Guest Wireless\r\n';
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
     a.download = 'subnet_import_template.csv';
@@ -1413,13 +1465,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const ci = hdrs.findIndex(h => ['subnet address','subnet','cidr','network'].includes(h));
       const di = hdrs.findIndex(h => ['description','desc'].includes(h));
       const vi = hdrs.findIndex(h => ['vlan','vlan id','vlan_id'].includes(h));
+      const ri = hdrs.findIndex(h => ['root','root bridge','root bridge id'].includes(h));
       if(ci === -1) { setStatus('Cannot find a "Subnet Address" column.', true); return; }
       const rows = [];
       for(let i = 1; i < lines.length; i++) {
         const cols = parseLine(lines[i]);
         const cidr = (cols[ci] || '').trim();
         if(!cidr) continue;
-        rows.push({ cidr, desc: di >= 0 ? (cols[di] || '').trim() : '', vlan: vi >= 0 ? (cols[vi] || '').trim() : '' });
+        rows.push({ cidr, desc: di >= 0 ? (cols[di] || '').trim() : '', vlan: vi >= 0 ? (cols[vi] || '').trim() : '', root: ri >= 0 ? (cols[ri] || '').trim() : '' });
       }
       if(!rows.length) { setStatus('No data rows found.', true); return; }
       const target = window._importTarget;
@@ -1462,7 +1515,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <p>
       <strong>Step 1:</strong> Download the template CSV, fill in your data, then import it.<br>
       Required column: <code>Subnet Address</code> (e.g. <code>10.0.0.0/24</code>).<br>
-      Optional columns: <code>VLAN</code> and <code>Description</code>.<br><br>
+      Optional columns: <code>Vlan</code>, <code>Root</code>, and <code>Description</code>.<br><br>
       <strong>Note:</strong> Import replaces the current section's data.<br><br>
       <strong>Row Order:</strong> The first row of network data must be your supernet (e.g. <code>10.0.0.0/16</code>). Subsequent rows should be subnets that fall within that supernet (e.g. <code>10.0.0.0/24</code>, <code>10.0.1.0/24</code>).
     </p>
