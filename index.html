@@ -92,27 +92,6 @@ td.tree-cell { padding-left: 4px !important; white-space: nowrap; width: 1px; }
   font-family: 'Courier New', monospace; font-size: 12px;
 }
 
-/* VLAN input */
-.vlan-input {
-  padding: 0 2px; font-size: 11px; height: 18px;
-  box-sizing: border-box; width: 52px;
-  border: 1px solid transparent; background: transparent;
-  border-radius: 2px; text-align: center;
-}
-.vlan-input:hover  { border-color: #9cbce0; background: rgba(255,255,255,.6); }
-.vlan-input:focus  { border-color: #2e6fba; background: #fff; outline: none; }
-
-/* Root input */
-.root-input {
-  padding: 0 2px; font-size: 11px; height: 18px;
-  box-sizing: border-box; width: 52px;
-  border: 1px solid transparent; background: transparent;
-  border-radius: 2px; text-align: center;
-}
-.root-input:hover  { border-color: #9cbce0; background: rgba(255,255,255,.6); }
-.root-input:focus  { border-color: #2e6fba; background: #fff; outline: none; }
-
-
 /* Desc input */
 .desc-input {
   padding: 0 2px; font-size: 11px; height: 18px;
@@ -285,24 +264,6 @@ td.tree-cell { padding-left: 4px !important; white-space: nowrap; width: 1px; }
   padding:4px 14px; cursor:pointer; font-size:12px; border-radius:3px;
 }
 .btn-imp-close:hover { background:#555; }
-/* ── RFC reference mini-tables ── */
-table.rfc-table {
-  border-collapse: collapse; margin-top: 5px; margin-bottom: 2px;
-  font-size: 11px; width: 100%;
-}
-table.rfc-table th {
-  background: #4a7ab5; color: #fff;
-  padding: 2px 8px; text-align: left; font-size: 11px;
-  border-bottom: 1px solid #1e52a0; white-space: nowrap;
-}
-table.rfc-table td {
-  padding: 1px 8px; border-bottom: 1px solid #dde8f8;
-  font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.4;
-}
-table.rfc-table td:last-child { font-family: inherit; }
-table.rfc-table tbody tr:nth-child(even) td { background: #f0f5fb; }
-table.rfc-table tbody tr:hover td { background: #d0e6ff !important; }
-
 /* ── Section toggle buttons ── */
 .btn-toggle-section {
   background: #7aaad8; color: #fff;
@@ -312,136 +273,7 @@ table.rfc-table tbody tr:hover td { background: #d0e6ff !important; }
   margin-left: 8px; vertical-align: middle;
 }
 .btn-toggle-section:hover { background: #4a7ab5; }
-/* ── Theme toggle button ── */
-#theme-toggle {
-  background: none; border: 1px solid #a8c0e8; border-radius: 20px;
-  padding: 4px 12px; cursor: pointer; font-size: 13px; color: #334;
-  white-space: nowrap; transition: background .15s, color .15s;
-}
-#theme-toggle:hover { background: #c8d8ee; }
-
-/* ── Reference section base (light mode) ── */
-.ref-col-heading { color: #334; }
-.rfc-content     { color: #334; }
-.rfc-badge       { color: #778; }
-.rfc-note        { color: #778; }
-
-/* ── Dark mode ── */
-body.dark {
-  background: #16191f;
-  color: #dde4f2;
-}
-body.dark h1 { color: #a4ccee; }
-body.dark hr { border-top-color: #2c3f58 !important; }
-body.dark #theme-toggle { border-color: #3a526e; color: #a4c0d8; background: #1e2533; }
-body.dark #theme-toggle:hover { background: #263040; }
-
-/* toolbar / state bar / ref box */
-body.dark .inst-topbar,
-body.dark .state-bar,
-body.dark #mask-ref-wrap {
-  background: #1e2533; border-color: #2c3f58;
-}
-body.dark .inst-topbar label,
-body.dark .col-toggles-wrap > b,
-body.dark .col-toggles-wrap label,
-body.dark .sb-lbl { color: #b0c8e0; }
-body.dark .inst-topbar input[type=text] {
-  background: #111622; border-color: #2c3f58; color: #dde4f2;
-}
-body.dark .state-bar-header { border-bottom-color: #2c3f58; }
-body.dark .state-bar-left   { border-right-color: #2c3f58; }
-body.dark .col-toggles-wrap { border-left-color: #2c3f58; }
-body.dark .error-msg        { color: #f08080; }
-
-/* subnet table header */
-body.dark table.subnet-table th { background: #1c3a60; border-bottom-color: #112a4a; }
-body.dark table.subnet-table td { border-bottom-color: #222c3c; }
-
-/* row depth shading */
-body.dark tr.d-0 td { background: #18202e; }
-body.dark tr.d-1 td { background: #1b2535; }
-body.dark tr.d-2 td { background: #1e293c; }
-body.dark tr.d-3 td { background: #202d42; }
-body.dark tr.d-4 td { background: #223148; }
-body.dark tr.d-5 td { background: #24354e; }
-body.dark tr.sn-row:hover td { filter: brightness(1.2); }
-
-/* no-desc (grey) and highlighted (yellow) rows */
-body.dark tr.sn-row.no-desc td           { background: #1c1e22 !important; color: #5a6a7a !important; }
-body.dark tr.sn-row.no-desc td .sn-addr  { color: #4a5a6a; }
-body.dark tr.sn-row.no-desc:hover td     { background: #222628 !important; }
-body.dark tr.sn-row.no-desc td input.desc-input { color: #5a6a7a; }
-body.dark tr.sn-row.row-highlighted td           { background: #3a3600 !important; color: #f5f200 !important; }
-body.dark tr.sn-row.row-highlighted td .sn-addr  { color: #f5f200; }
-body.dark tr.sn-row.row-highlighted:hover td     { background: #4a4600 !important; }
-
-/* monospace subnet address */
-body.dark .sn-addr { color: #88c0e8; }
-
-/* description / vlan inputs */
-body.dark .desc-input,
-body.dark .vlan-input,
-body.dark .root-input { color: #dde4f2; }
-body.dark .desc-input:hover,
-body.dark .vlan-input:hover,
-body.dark .root-input:hover  { background: rgba(255,255,255,.07); border-color: #3a526e; }
-body.dark .desc-input:focus,
-body.dark .vlan-input:focus,
-body.dark .root-input:focus  { background: #111622; border-color: #5590c8; }
-
-/* join / divide buttons */
-body.dark .btn-join-cidr               { background: #1c4878; color: #c8dff4; }
-body.dark .btn-join-cidr:hover         { background: #2a64aa; }
-body.dark .join-label-inactive         { background: #16202c; color: #304050; }
-body.dark .join-col-cell               { border-left-color: #2c3f58; }
-body.dark .join-col-cell:first-of-type { border-left-color: #1c3a60; }
-body.dark .btn-divide                  { background: #1c4878; border-color: #112a4a; }
-body.dark .btn-divide:hover:not(:disabled) { background: #2a64aa; }
-
-/* state bar text */
-body.dark .permalink         { color: #6ab0e8; }
-body.dark a.permalink:hover  { color: #90ccff; }
-body.dark .hi  { color: #4a6a88; }
-body.dark .hl  { color: #9abcd4; }
-body.dark .ht  { color: #4a6a88; }
-body.dark .btn-restore       { background: #1a5c38; border-color: #124028; }
-body.dark .btn-restore:hover { background: #226844; }
-
-/* subnet mask reference table */
-body.dark table.mask-ref-table td {
-  border-color: #2c3f58; color: #c8d8ec;
-}
-body.dark table.mask-ref-table tbody tr:nth-child(odd)  td { background: #18202e; }
-body.dark table.mask-ref-table tbody tr:nth-child(even) td { background: #1e2533; }
-body.dark table.mask-ref-table tbody tr.mrt-special td     { background: #112a4a !important; color: #88c0e8; }
-body.dark table.mask-ref-table tbody tr:hover td           { background: #1e3a5e !important; }
-
-/* reference section text */
-body.dark .ref-col-heading { color: #b0c8e0; }
-body.dark .rfc-content     { color: #ccd8ec; }
-body.dark .rfc-badge       { color: #7aa8c8; }
-body.dark .rfc-note        { color: #7aa8c8; border-top-color: #2c3f58 !important; }
-
-/* RFC mini-tables */
-body.dark table.rfc-table td {
-  border-color: #2c3f58; color: #ccd8ec;
-}
-body.dark table.rfc-table tbody tr:nth-child(odd)  td { background: #18202e; }
-body.dark table.rfc-table tbody tr:nth-child(even) td { background: #1e2533; }
-body.dark table.rfc-table tbody tr:hover td            { background: #1e3a5e !important; }
-
-/* modal */
-body.dark .imp-overlay { background: rgba(0,0,0,.65); }
-body.dark .imp-modal   { background: #1e2533; color: #dde4f2; }
-body.dark .imp-modal h3 { color: #a4ccee; }
-body.dark .imp-modal p  { color: #a0b8d0; }
-body.dark .imp-modal p code { background: #111622; color: #88c0e8; }
-
-/* footer */
-body.dark .page-footer   { border-top-color: #2c3f58; color: #6a8aaa; }
-body.dark .page-footer a { color: #6ab0e8; }
-
+/* ── Subnet Mask Reference Table ── */
 #mask-ref-wrap {
   margin-top: 20px;
   background: #dde8f8; border: 1px solid #a8c0e8;
@@ -465,10 +297,18 @@ table.mask-ref-table tbody tr:nth-child(even) td { background: #f0f5fb; }
 table.mask-ref-table tbody tr.mrt-special td { background: #dce8f8 !important; font-weight: 700; color: #0f2e56; }
 table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor: default; }
 
+/* ── Theme toggle button ── */
+#theme-toggle {
+  background: none; border: 1px solid #a8c0e8; border-radius: 20px;
+  padding: 4px 12px; cursor: pointer; font-size: 13px; color: #334;
+  white-space: nowrap; transition: background .15s, color .15s;
+}
+#theme-toggle:hover { background: #c8d8ee; }
+
 /* ── Sheet description bar ── */
 .sheet-desc-bar {
   display: flex; align-items: center; gap: 8px;
-  background: #eef3fb; border: 1px solid #a8c0e8;
+  background: #dde8f8; border: 1px solid #a8c0e8;
   border-radius: 4px; padding: 5px 10px; margin-bottom: 8px;
 }
 .sheet-desc-bar label { font-weight: 700; color: #334; white-space: nowrap; font-size: 13px; }
@@ -478,11 +318,116 @@ table.mask-ref-table tbody tr:hover td { background: #d0e6ff !important; cursor:
 }
 .sheet-desc-input:hover { border-color: #9cbce0; background: rgba(255,255,255,.7); }
 .sheet-desc-input:focus { border-color: #2e6fba; background: #fff; outline: none; }
-body.dark .sheet-desc-bar  { background: #1a2230; border-color: #2c3f58; }
+
+/* ── Reference section base ── */
+.ref-col-heading { color: #334; }
+.rfc-content     { color: #334; }
+.rfc-badge       { color: #778; }
+.rfc-note        { color: #778; }
+
+/* ── RFC reference mini-tables ── */
+table.rfc-table {
+  border-collapse: collapse; margin-top: 5px; margin-bottom: 2px;
+  font-size: 11px; width: 100%;
+}
+table.rfc-table th {
+  background: #4a7ab5; color: #fff;
+  padding: 2px 8px; text-align: left; font-size: 11px;
+  border-bottom: 1px solid #1e52a0; white-space: nowrap;
+}
+table.rfc-table td {
+  padding: 1px 8px; border-bottom: 1px solid #dde8f8;
+  font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.4;
+}
+table.rfc-table td:last-child { font-family: inherit; }
+table.rfc-table tbody tr:nth-child(even) td { background: #f0f5fb; }
+table.rfc-table tbody tr:hover td { background: #d0e6ff !important; }
+
+/* ── Dark mode ── */
+body.dark {
+  background: #16191f;
+  color: #dde4f2;
+}
+body.dark h1 { color: #a4ccee; }
+body.dark hr { border-top-color: #2c3f58 !important; }
+body.dark #theme-toggle { border-color: #3a526e; color: #a4c0d8; background: #1e2533; }
+body.dark #theme-toggle:hover { background: #263040; }
+body.dark .inst-topbar,
+body.dark .state-bar,
+body.dark #mask-ref-wrap,
+body.dark .sheet-desc-bar {
+  background: #1e2533; border-color: #2c3f58;
+}
+body.dark .inst-topbar label,
+body.dark .col-toggles-wrap > b,
+body.dark .col-toggles-wrap label,
+body.dark .sb-lbl,
 body.dark .sheet-desc-bar label { color: #b0c8e0; }
-body.dark .sheet-desc-input { color: #dde4f2; }
+body.dark .inst-topbar input[type=text],
+body.dark .sheet-desc-input {
+  background: #111622; border-color: #2c3f58; color: #dde4f2;
+}
 body.dark .sheet-desc-input:hover { background: rgba(255,255,255,.07); border-color: #3a526e; }
 body.dark .sheet-desc-input:focus { background: #111622; border-color: #5590c8; }
+body.dark .state-bar-header { border-bottom-color: #2c3f58; }
+body.dark .state-bar-left   { border-right-color: #2c3f58; }
+body.dark .col-toggles-wrap { border-left-color: #2c3f58; }
+body.dark .error-msg        { color: #f08080; }
+body.dark table.subnet-table th { background: #1c3a60; border-bottom-color: #112a4a; }
+body.dark table.subnet-table td { border-bottom-color: #222c3c; }
+body.dark tr.d-0 td { background: #18202e; }
+body.dark tr.d-1 td { background: #1b2535; }
+body.dark tr.d-2 td { background: #1e293c; }
+body.dark tr.d-3 td { background: #202d42; }
+body.dark tr.d-4 td { background: #223148; }
+body.dark tr.d-5 td { background: #24354e; }
+body.dark tr.sn-row:hover td { filter: brightness(1.2); }
+body.dark tr.sn-row.no-desc td           { background: #1c1e22 !important; color: #5a6a7a !important; }
+body.dark tr.sn-row.no-desc td .sn-addr  { color: #4a5a6a; }
+body.dark tr.sn-row.no-desc:hover td     { background: #222628 !important; }
+body.dark tr.sn-row.no-desc td input.desc-input { color: #5a6a7a; }
+body.dark tr.sn-row.row-highlighted td           { background: #3a3600 !important; color: #f5f200 !important; }
+body.dark tr.sn-row.row-highlighted td .sn-addr  { color: #f5f200; }
+body.dark tr.sn-row.row-highlighted:hover td     { background: #4a4600 !important; }
+body.dark .sn-addr { color: #88c0e8; }
+body.dark .desc-input { color: #dde4f2; }
+body.dark .desc-input:hover { background: rgba(255,255,255,.07); border-color: #3a526e; }
+body.dark .desc-input:focus { background: #111622; border-color: #5590c8; }
+body.dark .btn-join-cidr               { background: #1c4878; color: #c8dff4; }
+body.dark .btn-join-cidr:hover         { background: #2a64aa; }
+body.dark .join-label-inactive         { background: #16202c; color: #304050; }
+body.dark .join-col-cell               { border-left-color: #2c3f58; }
+body.dark .join-col-cell:first-of-type { border-left-color: #1c3a60; }
+body.dark .btn-divide                  { background: #1c4878; border-color: #112a4a; }
+body.dark .btn-divide:hover:not(:disabled) { background: #2a64aa; }
+body.dark .permalink         { color: #6ab0e8; }
+body.dark a.permalink:hover  { color: #90ccff; }
+body.dark .hi  { color: #4a6a88; }
+body.dark .hl  { color: #9abcd4; }
+body.dark .ht  { color: #4a6a88; }
+body.dark .btn-restore       { background: #1a5c38; border-color: #124028; }
+body.dark .btn-restore:hover { background: #226844; }
+body.dark table.mask-ref-table td { border-color: #2c3f58; color: #c8d8ec; }
+body.dark table.mask-ref-table tbody tr:nth-child(odd)  td { background: #18202e; }
+body.dark table.mask-ref-table tbody tr:nth-child(even) td { background: #1e2533; }
+body.dark table.mask-ref-table tbody tr.mrt-special td     { background: #112a4a !important; color: #88c0e8; }
+body.dark table.mask-ref-table tbody tr:hover td           { background: #1e3a5e !important; }
+body.dark .ref-col-heading { color: #b0c8e0; }
+body.dark .rfc-content     { color: #ccd8ec; }
+body.dark .rfc-badge       { color: #7aa8c8; }
+body.dark .rfc-note        { color: #7aa8c8; border-top-color: #2c3f58 !important; }
+body.dark table.rfc-table td { border-color: #2c3f58; color: #ccd8ec; }
+body.dark table.rfc-table tbody tr:nth-child(odd)  td { background: #18202e; }
+body.dark table.rfc-table tbody tr:nth-child(even) td { background: #1e2533; }
+body.dark table.rfc-table tbody tr:hover td            { background: #1e3a5e !important; }
+body.dark .imp-overlay { background: rgba(0,0,0,.65); }
+body.dark .imp-modal   { background: #1e2533; color: #dde4f2; }
+body.dark .imp-modal h3 { color: #a4ccee; }
+body.dark .imp-modal p  { color: #a0b8d0; }
+body.dark .imp-modal p code { background: #111622; color: #88c0e8; }
+body.dark #mask-ref-wrap h2 { color: #9bbcd8; }
+body.dark .page-footer   { border-top-color: #2c3f58; color: #6a8aaa; }
+body.dark .page-footer a { color: #6ab0e8; }
 </style>
 </head>
 <body>
@@ -506,8 +451,6 @@ body.dark .sheet-desc-input:focus { background: #111622; border-color: #5590c8; 
       <label><input type="checkbox" class="col-toggle" data-col="range"    checked> Range</label>
       <label><input type="checkbox" class="col-toggle" data-col="useable"  checked> Useable IPs</label>
       <label><input type="checkbox" class="col-toggle" data-col="hosts"    checked> Hosts</label>
-      <label><input type="checkbox" class="col-toggle" data-col="vlan"     checked> Vlan</label>
-      <label><input type="checkbox" class="col-toggle" data-col="root"     checked> Root</label>
       <label><input type="checkbox" class="col-toggle" data-col="desc"     checked> Description</label>
     </div>
     <div style="margin-left:auto;display:flex;gap:6px"><button class="import-btn">&#8679; Import CSV</button><button class="csv-btn">&#8681; Export CSV</button></div>
@@ -525,8 +468,6 @@ body.dark .sheet-desc-input:focus { background: #111622; border-color: #5590c8; 
           <th class="col-range">Range of addresses</th>
           <th class="col-useable">Useable IPs</th>
           <th class="col-hosts" style="text-align:right">Hosts</th>
-          <th class="col-vlan" style="white-space:nowrap;padding:2px 6px">Vlan</th>
-          <th class="col-root" style="white-space:nowrap;padding:2px 6px">Root</th>
           <th class="col-desc" style="min-width:280px">Description</th>
           <th style="white-space:nowrap;padding:2px 4px;font-size:11px"></th>
           <th style="min-width:0;white-space:nowrap;padding:2px 4px">Divide</th>
@@ -534,7 +475,7 @@ body.dark .sheet-desc-input:focus { background: #111622; border-color: #5590c8; 
         </tr>
       </thead>
       <tbody class="subnet-tbody">
-        <tr class="no-rows"><td colspan="12">Enter a network above and click &#9654; Load.</td></tr>
+        <tr class="no-rows"><td colspan="10">Enter a network above and click &#9654; Load.</td></tr>
       </tbody>
     </table>
   </div>
@@ -872,7 +813,7 @@ function deserTree(str,pos,net,bits){
 function createInstance(containerEl, instIndex){
   // per-instance state
   let rootNet=null, rootBits=null, tree=null;
-  let descriptions=new Map(), vlans=new Map(), roots=new Map(), collapsed=new Set(), snapshots=[];
+  let descriptions=new Map(), collapsed=new Set(), snapshots=[];
   let highlighted=new Set();
 
   // DOM refs (scoped to this container)
@@ -907,34 +848,6 @@ function createInstance(containerEl, instIndex){
       for(let i=0;i+1<a.length;i+=2) descriptions.set(a[i],a[i+1]);
     }catch(e){}
   }
-  function serVlans(){
-    const a=[];
-    vlans.forEach((v,k)=>{ if(v) a.push(k,v); });
-    if(!a.length) return '';
-    try{ return btoa(unescape(encodeURIComponent(JSON.stringify(a)))); }catch(e){return '';}
-  }
-  function deserVlans(s){
-    vlans=new Map();
-    if(!s) return;
-    try{
-      const a=JSON.parse(decodeURIComponent(escape(atob(s))));
-      for(let i=0;i+1<a.length;i+=2) vlans.set(a[i],a[i+1]);
-    }catch(e){}
-  }
-  function serRoots(){
-    const a=[];
-    roots.forEach((v,k)=>{ if(v) a.push(k,v); });
-    if(!a.length) return '';
-    try{ return btoa(unescape(encodeURIComponent(JSON.stringify(a)))); }catch(e){return '';}
-  }
-  function deserRoots(s){
-    roots=new Map();
-    if(!s) return;
-    try{
-      const a=JSON.parse(decodeURIComponent(escape(atob(s))));
-      for(let i=0;i+1<a.length;i+=2) roots.set(a[i],a[i+1]);
-    }catch(e){}
-  }
 
   function fmtTimestamp(){
     const d=new Date();
@@ -958,10 +871,9 @@ function createInstance(containerEl, instIndex){
       tree: tree ? serTree(tree) : null,
       rootNet, rootBits,
       descs: serDescs(),
-      vlansSer: serVlans(),
-      rootsSer: serRoots(),
       hi: [...highlighted].join(','),
-      cidr: tree ? `${numToIp(rootNet)}/${rootBits}` : ''
+      cidr: tree ? `${numToIp(rootNet)}/${rootBits}` : '',
+      sheetDesc: sheetDescInp ? sheetDescInp.value : ''
     };
     snapshots.push(snap);
     renderSnapshots();
@@ -990,16 +902,11 @@ function createInstance(containerEl, instIndex){
         // Restore descriptions
         descriptions=new Map();
         if(snap.descs) deserDescs(snap.descs);
-        // Restore vlans
-        vlans=new Map();
-        if(snap.vlansSer) deserVlans(snap.vlansSer);
-        // Restore roots
-        roots=new Map();
-        if(snap.rootsSer) deserRoots(snap.rootsSer);
         // Restore highlights
         highlighted=new Set();
         if(snap.hi) snap.hi.split(',').forEach(k=>{ if(k) highlighted.add(k); });
         collapsed=new Set();
+        if(sheetDescInp) sheetDescInp.value = snap.sheetDesc || '';
         render();
       });
       li.innerHTML=`<span class="hi">#${idx}</span>`+
@@ -1031,7 +938,7 @@ function createInstance(containerEl, instIndex){
   function renderTable(){
     tbody.innerHTML='';
     if(!tree){
-      tbody.innerHTML='<tr class="no-rows"><td colspan="12">Enter a network above and click &#9654; Load.</td></tr>';
+      tbody.innerHTML='<tr class="no-rows"><td colspan="10">Enter a network above and click &#9654; Load.</td></tr>';
       applyColVisibility(); return;
     }
 
@@ -1077,8 +984,6 @@ function createInstance(containerEl, instIndex){
         `<td class="col-range">${numToIp(net)} &ndash; ${numToIp(bcast)}</td>`+
         `<td class="col-useable">${useStr}</td>`+
         `<td class="col-hosts" style="text-align:right">${useH.toLocaleString()}</td>`+
-        `<td class="col-vlan" style="padding:0 3px;width:1px"><input class="vlan-input" type="text" maxlength="10" placeholder="Vlan" value="${esc(vlans.get(k)||'')}" data-key="${k}"></td>`+
-        `<td class="col-root" style="padding:0 3px;width:1px"><input class="root-input" type="text" maxlength="20" placeholder="Root" value="${esc(roots.get(k)||'')}" data-key="${k}"></td>`+
         `<td class="col-desc"><input class="desc-input" type="text" placeholder="Add description&hellip;" value="${esc(desc)}" data-key="${k}"></td>`+
         `<td style="white-space:nowrap;padding:0 4px;font-family:'Courier New',monospace;font-size:11px;color:#557;width:1px">/${bits}</td>`+
         `<td style="white-space:nowrap;padding:0 3px"><button class="btn-divide" data-net="${net}" data-bits="${bits}" ${bits<32?'':'disabled'}>Divide</button></td>`;
@@ -1116,7 +1021,7 @@ function createInstance(containerEl, instIndex){
     const bits=parseInt(mStr);
     rootNet=netAddr(nStr,bits); rootBits=bits;
     tree=makeLeaf(rootNet,bits);
-    descriptions=new Map(); collapsed=new Set(); highlighted=new Set(); vlans=new Map(); roots=new Map();
+    descriptions=new Map(); collapsed=new Set(); highlighted=new Set();
     render();
   }
 
@@ -1153,8 +1058,6 @@ function createInstance(containerEl, instIndex){
     descriptions = new Map();
     highlighted = new Set();
     collapsed = new Set();
-    vlans = new Map();
-    roots = new Map();
     rows.forEach(row => {
       const s = row.cidr.lastIndexOf('/');
       if(s === -1) return;
@@ -1163,8 +1066,6 @@ function createInstance(containerEl, instIndex){
       if(isNaN(rBits)) return;
       _insertLeaf(tree, rNet, rBits);
       if(row.desc) descriptions.set(key(rNet, rBits), row.desc);
-      if(row.vlan) vlans.set(key(rNet, rBits), row.vlan);
-      if(row.root) roots.set(key(rNet, rBits), row.root);
     });
     render();
     return null;
@@ -1182,7 +1083,7 @@ function createInstance(containerEl, instIndex){
     if(!tree){ alert('No network loaded.'); return; }
     const leaves = [];
     getLeaves(tree, leaves);
-    const rows = [['Subnet Address','Netmask','Range Start','Range End','Useable Start','Useable End','Hosts','Vlan','Root','Description']];
+    const rows = [['Subnet Address','Netmask','Range Start','Range End','Useable Start','Useable End','Hosts','Description']];
     // First row: the root supernet
     const rootBcast = bcastAddr(rootNet, rootBits);
     rows.push([
@@ -1193,8 +1094,6 @@ function createInstance(containerEl, instIndex){
       rootBits <= 30 ? numToIp(rootNet + 1) : numToIp(rootNet),
       rootBits <= 30 ? numToIp(rootBcast - 1) : numToIp(rootBcast),
       hostCount(rootBits).toString(),
-      '',
-      '',
       '"Supernet"'
     ]);
     leaves.forEach(node => {
@@ -1203,8 +1102,6 @@ function createInstance(containerEl, instIndex){
       const useH   = hostCount(bits);
       const firstU = bits <= 30 ? net + 1 : net;
       const lastU  = bits <= 30 ? bcast - 1 : bcast;
-      const vlan   = vlans.get(key(net,bits)) || '';
-      const root   = roots.get(key(net,bits)) || '';
       const desc   = (descriptions.get(key(net,bits)) || '').replace(/"/g, '""');
       rows.push([
         `${numToIp(net)}/${bits}`,
@@ -1214,8 +1111,6 @@ function createInstance(containerEl, instIndex){
         bits <= 30 ? numToIp(firstU) : numToIp(net),
         bits <= 30 ? numToIp(lastU)  : numToIp(bcast),
         useH.toString(),
-        vlan,
-        root,
         `"${desc}"`
       ]);
     });
@@ -1231,10 +1126,10 @@ function createInstance(containerEl, instIndex){
 
   clearBtn.addEventListener('click',()=>{
     rootNet=null; rootBits=null; tree=null;
-    descriptions=new Map(); collapsed=new Set(); snapshots=[]; highlighted=new Set(); vlans=new Map(); roots=new Map();
+    descriptions=new Map(); collapsed=new Set(); snapshots=[]; highlighted=new Set();
     cidrInput.value=''; errEl.textContent='';
-    if(sheetDescInp) sheetDescInp.value = '';
-    tbody.innerHTML='<tr class="no-rows"><td colspan="12">Enter a network above and click &#9654; Load.</td></tr>';
+    tbody.innerHTML='<tr class="no-rows"><td colspan="10">Enter a network above and click &#9654; Load.</td></tr>';
+    if(sheetDescInp) sheetDescInp.value='';
     histList.innerHTML=''; histSec.style.display='none';
     if(typeof updateAllPermalinks==='function') updateAllPermalinks();
   });
@@ -1247,10 +1142,8 @@ function createInstance(containerEl, instIndex){
       else if(btn.classList.contains('btn-join-cidr')) doJoinSelf(net,bits);
       return;
     }
-    if(e.target.closest('button')) return; // already handled above
-    // Don't highlight when clicking anywhere inside a cell that has an editable input
     const tdClicked = e.target.closest('td');
-    if(tdClicked && tdClicked.querySelector('.desc-input, .vlan-input, .root-input')) return;
+    if(tdClicked && tdClicked.querySelector('.desc-input')) return;
     const tr=e.target.closest('tr.sn-row');
     if(!tr) return;
     const k=tr.dataset.key; if(!k) return;
@@ -1270,46 +1163,22 @@ function createInstance(containerEl, instIndex){
     if(typeof updateAllPermalinks==='function') updateAllPermalinks();
   });
 
-  tbody.addEventListener('input',e=>{
-    const inp=e.target.closest('.vlan-input');
-    if(!inp) return;
-    const v=inp.value;
-    if(v.trim()) vlans.set(inp.dataset.key, v);
-    else vlans.delete(inp.dataset.key);
-    if(typeof updateAllPermalinks==='function') updateAllPermalinks();
-  });
-
-  tbody.addEventListener('input',e=>{
-    const inp=e.target.closest('.root-input');
-    if(!inp) return;
-    const v=inp.value;
-    if(v.trim()) roots.set(inp.dataset.key, v);
-    else roots.delete(inp.dataset.key);
-    if(typeof updateAllPermalinks==='function') updateAllPermalinks();
-  });
-
   qa('.col-toggle').forEach(chk=>chk.addEventListener('change',()=>{
     applyColVisibility();
     if(typeof updateAllPermalinks==='function') updateAllPermalinks();
   }));
-
-  if(sheetDescInp) sheetDescInp.addEventListener('input', ()=>{
-    if(typeof updateAllPermalinks==='function') updateAllPermalinks();
-  });
 
   // ── Public API ──
   function getState(){
     if(!tree) return null;
     const division = serTree(tree);
     const descs    = serDescs();
-    const vlansSer = serVlans();
-    const rootsSer = serRoots();
     const hiArr    = [...highlighted].filter(Boolean);
     const hi       = hiArr.length ? hiArr.join(',') : '';
-    return { cidr: `${numToIp(rootNet)}/${rootBits}`, division, descs, vlans: vlansSer, roots: rootsSer, hi, sheetDesc: sheetDescInp ? sheetDescInp.value : '' };
+    return { cidr: `${numToIp(rootNet)}/${rootBits}`, division, descs, hi, sheetDesc: sheetDescInp ? sheetDescInp.value : '' };
   }
 
-  function restoreState({cidr, division, descs, vlans: vlansSer, roots: rootsSer, hi, sheetDesc}){
+  function restoreState({cidr, division, descs, hi, sheetDesc}){
     const slash = cidr.lastIndexOf('/');
     if(slash===-1) return;
     const nStr=cidr.slice(0,slash).trim(), mStr=cidr.slice(slash+1).trim();
@@ -1320,8 +1189,6 @@ function createInstance(containerEl, instIndex){
     tree=makeLeaf(rootNet,bits);
     if(division){ try{ tree=deserTree(division,{i:0},rootNet,rootBits); }catch(e){} }
     if(descs) deserDescs(descs);
-    if(vlansSer) deserVlans(vlansSer); else vlans=new Map();
-    if(rootsSer) deserRoots(rootsSer); else roots=new Map();
     if(hi){ hi.split(',').forEach(k=>{ if(k) highlighted.add(k); }); }
     if(sheetDescInp) sheetDescInp.value = sheetDesc || '';
     descriptions=descriptions; collapsed=new Set();
@@ -1353,6 +1220,10 @@ function createInstance(containerEl, instIndex){
     render();
   }
 
+  if(sheetDescInp) sheetDescInp.addEventListener('input', ()=>{
+    if(typeof updateAllPermalinks==='function') updateAllPermalinks();
+  });
+
   return { getState, restoreState, setPermalink };
 }
 
@@ -1373,8 +1244,6 @@ function buildFullUrl(){
     if(state.division) params.set(`${prefix}d`, packTree(state.division));
     if(state.descs)    params.set(`${prefix}desc`, state.descs);
     if(state.sheetDesc) params.set(`${prefix}sd`, encodeURIComponent(state.sheetDesc));
-    if(state.vlans)    params.set(`${prefix}vl`, state.vlans);
-    if(state.roots)    params.set(`${prefix}rt`, state.roots);
     if(state.hi)       params.set(`${prefix}hi`, state.hi);
   });
   const qs = params.toString();
@@ -1396,11 +1265,9 @@ function updateAllPermalinks(){
     if(!cidr) return;
     const division = p.get(`${prefix}d`) || '';
     const descs    = p.get(`${prefix}desc`) || '';
-    const vlansSer = p.get(`${prefix}vl`) || '';
-    const rootsSer = p.get(`${prefix}rt`) || '';
     const sheetDesc = decodeURIComponent(p.get(`${prefix}sd`) || '');
     const hi       = p.get(`${prefix}hi`) || '';
-    inst.restoreState({cidr, division: division ? unpackTree(division) : '', descs, vlans: vlansSer, roots: rootsSer, sheetDesc, hi});
+    inst.restoreState({cidr, division: division ? unpackTree(division) : '', descs, hi, sheetDesc});
   });
 })();
 
@@ -1437,12 +1304,12 @@ function updateAllPermalinks(){
     btn.textContent = dark ? '☀️ Light' : '🌙 Dark';
     try{ localStorage.setItem('sn_theme', dark ? 'dark' : 'light'); }catch(e){}
   };
-  // Restore saved preference
   let saved = 'light';
   try{ saved = localStorage.getItem('sn_theme') || 'light'; }catch(e){}
   applyTheme(saved === 'dark');
   btn.addEventListener('click', () => applyTheme(!document.body.classList.contains('dark')));
 })();
+
 
 // ── Section toggle buttons ────────────────────────────────────────────────────
 document.querySelectorAll('.btn-toggle-section').forEach(btn => {
@@ -1455,41 +1322,15 @@ document.querySelectorAll('.btn-toggle-section').forEach(btn => {
   });
 });
 
-// ── Keyboard navigation in table cell inputs (Enter=down, Tab=right) ──────────
+// ── Enter key in description field → move to next row's desc ─────────────────
 document.addEventListener('keydown', e => {
-  const inp = e.target.closest('.desc-input, .vlan-input, .root-input');
+  if(e.key !== 'Enter') return;
+  const inp = e.target.closest('.desc-input');
   if(!inp) return;
-
-  // Determine which column type we're in
-  const colClass = inp.classList.contains('vlan-input') ? 'vlan-input'
-                 : inp.classList.contains('root-input') ? 'root-input'
-                 : 'desc-input';
-
-  if(e.key === 'Enter') {
-    e.preventDefault();
-    // Move to same column in next row
-    const allInCol = [...document.querySelectorAll(`.${colClass}`)];
-    const idx = allInCol.indexOf(inp);
-    if(idx >= 0 && idx < allInCol.length - 1) allInCol[idx + 1].focus();
-
-  } else if(e.key === 'Tab') {
-    // Move to next editable column in same row (vlan → root → desc → vlan of next row)
-    const colOrder = ['vlan-input', 'root-input', 'desc-input'];
-    const curColIdx = colOrder.indexOf(colClass);
-    const tr = inp.closest('tr');
-    if(!tr) return;
-
-    if(curColIdx < colOrder.length - 1 && !e.shiftKey) {
-      // Move right within same row
-      const nextInput = tr.querySelector(`.${colOrder[curColIdx + 1]}`);
-      if(nextInput){ e.preventDefault(); nextInput.focus(); }
-    } else if(curColIdx > 0 && e.shiftKey) {
-      // Shift-Tab: move left within same row
-      const prevInput = tr.querySelector(`.${colOrder[curColIdx - 1]}`);
-      if(prevInput){ e.preventDefault(); prevInput.focus(); }
-    }
-    // Otherwise let browser handle Tab naturally (wrap to next/prev row)
-  }
+  e.preventDefault();
+  const allInputs = [...document.querySelectorAll('.desc-input')];
+  const idx = allInputs.indexOf(inp);
+  if(idx >= 0 && idx < allInputs.length - 1) allInputs[idx + 1].focus();
 });
 
 // ── Import modal wiring ───────────────────────────────────────────────────────
@@ -1505,7 +1346,7 @@ document.addEventListener('DOMContentLoaded', () => {
   overlay.addEventListener('click', e => { if(e.target === overlay) overlay.classList.remove('open'); });
 
   tplBtn.addEventListener('click', () => {
-    const csv = 'Subnet Address,Vlan,Root,Description\r\n10.0.0.0/16,,,Supernet\r\n10.0.1.0/24,10,,Management Vlan\r\n10.0.2.0/24,20,,Dev Environment\r\n10.0.3.0/24,30,,Guest Wireless\r\n';
+    const csv = 'Subnet Address,Description\r\n10.0.0.0/16,Supernet\r\n10.0.1.0/24,Management\r\n10.0.2.0/24,Dev Environment\r\n10.0.3.0/24,Guest Wireless\r\n';
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
     a.download = 'subnet_import_template.csv';
@@ -1525,15 +1366,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const hdrs = parseLine(lines[0]).map(h => h.toLowerCase().trim());
       const ci = hdrs.findIndex(h => ['subnet address','subnet','cidr','network'].includes(h));
       const di = hdrs.findIndex(h => ['description','desc'].includes(h));
-      const vi = hdrs.findIndex(h => ['vlan','vlan id','vlan_id'].includes(h));
-      const ri = hdrs.findIndex(h => ['root','root bridge','root bridge id'].includes(h));
       if(ci === -1) { setStatus('Cannot find a "Subnet Address" column.', true); return; }
       const rows = [];
       for(let i = 1; i < lines.length; i++) {
         const cols = parseLine(lines[i]);
         const cidr = (cols[ci] || '').trim();
         if(!cidr) continue;
-        rows.push({ cidr, desc: di >= 0 ? (cols[di] || '').trim() : '', vlan: vi >= 0 ? (cols[vi] || '').trim() : '', root: ri >= 0 ? (cols[ri] || '').trim() : '' });
+        rows.push({ cidr, desc: di >= 0 ? (cols[di] || '').trim() : '' });
       }
       if(!rows.length) { setStatus('No data rows found.', true); return; }
       const target = window._importTarget;
@@ -1576,7 +1415,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <p>
       <strong>Step 1:</strong> Download the template CSV, fill in your data, then import it.<br>
       Required column: <code>Subnet Address</code> (e.g. <code>10.0.0.0/24</code>).<br>
-      Optional columns: <code>Vlan</code>, <code>Root</code>, and <code>Description</code>.<br><br>
+      Optional column: <code>Description</code>.<br><br>
       <strong>Note:</strong> Import replaces the current section's data.<br><br>
       <strong>Row Order:</strong> The first row of network data must be your supernet (e.g. <code>10.0.0.0/16</code>). Subsequent rows should be subnets that fall within that supernet (e.g. <code>10.0.0.0/24</code>, <code>10.0.1.0/24</code>).
     </p>
